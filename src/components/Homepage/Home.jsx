@@ -47,15 +47,26 @@ const Home = () => {
     fetchData();
   }, [languages]);
 
+  const quickPicks = Array.isArray(data?.quickPicks)
+    ? data.quickPicks
+    : Array.isArray(data?.trending?.quickPicks)
+    ? data.trending.quickPicks
+    : [];
   const trendingSongs = Array.isArray(data?.trending?.songs)
     ? data.trending.songs
-    : [];
-  const trendingAlbums = Array.isArray(data?.trending?.albums)
-    ? data.trending.albums
     : [];
   const charts = Array.isArray(data?.charts) ? data.charts : [];
   const albums = Array.isArray(data?.albums) ? data.albums : [];
   const playlists = Array.isArray(data?.playlists) ? data.playlists : [];
+
+  const quickPickList =
+    quickPicks.length > 0 ? quickPicks : trendingSongs.slice(0, 8);
+  const trendingList =
+    quickPicks.length > 0
+      ? trendingSongs
+      : trendingSongs.slice(8).length > 0
+      ? trendingSongs.slice(8)
+      : trendingSongs;
 
   return (
     <div className="pt-2 sm:pt-4">
@@ -75,8 +86,8 @@ const Home = () => {
       <ListenAgain />
 
       {/* Quick Picks • Tap to play */}
-      {!loading && trendingSongs.length > 0 && (
-        <QuickPicks songs={trendingSongs} />
+      {!loading && quickPickList.length > 0 && (
+        <QuickPicks songs={quickPickList} />
       )}
 
       {/* trending */}
@@ -84,27 +95,15 @@ const Home = () => {
         {loading ? (
           <SongCardSkeleton />
         ) : (
-          <>
-            {trendingSongs.map((song) => (
-              <SwiperSlide key={song?.id}>
-                <SongCard
-                  song={song}
-                  activeSong={activeSong}
-                  isPlaying={isPlaying}
-                />
-              </SwiperSlide>
-            ))}
-
-            {trendingAlbums.map((song) => (
-              <SwiperSlide key={song?.id}>
-                <SongCard
-                  song={song}
-                  activeSong={activeSong}
-                  isPlaying={isPlaying}
-                />
-              </SwiperSlide>
-            ))}
-          </>
+          trendingList.map((song) => (
+            <SwiperSlide key={song?.id}>
+              <SongCard
+                song={song}
+                activeSong={activeSong}
+                isPlaying={isPlaying}
+              />
+            </SwiperSlide>
+          ))
         )}
       </SwiperLayout>
 
