@@ -189,7 +189,7 @@ const MusicPlayer = () => {
         className={`transition-all duration-300 select-none ${
           fullScreen
             ? "fixed inset-0 z-50 h-screen w-screen overflow-y-auto hideScrollBar px-4 sm:px-12 flex flex-col bg-black/40 backdrop-blur-3xl border-t border-white/15"
-            : "fixed bottom-3 inset-x-2 sm:inset-x-6 max-w-5xl mx-auto z-50 h-[64px] rounded-full bg-black/35 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.25)] px-3 sm:px-6 flex flex-col justify-center cursor-pointer overflow-hidden"
+            : "fixed bottom-3 inset-x-2 sm:inset-x-6 max-w-5xl mx-auto z-50 h-[80px] sm:h-[84px] rounded-3xl sm:rounded-full bg-black/40 backdrop-blur-2xl border border-white/20 shadow-[0_12px_40px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.25)] px-3.5 sm:px-6 flex flex-col justify-center cursor-pointer overflow-hidden"
         }`}
         onClick={() => {
           if (activeSong?.id) {

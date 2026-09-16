@@ -73,7 +73,7 @@ const Controls = ({
         onClick={handlePrevSong}
         className="text-white hover:text-[#00e6e6] active:scale-90 transition-transform p-1 cursor-pointer"
       >
-        <MdSkipPrevious size={fullScreen ? 36 : 28} />
+        <MdSkipPrevious size={fullScreen ? 36 : 30} />
       </button>
 
       {isPlaying ? (
@@ -84,10 +84,10 @@ const Controls = ({
           className={`${
             fullScreen
               ? "w-14 h-14 sm:w-16 sm:h-16 shadow-[0_0_30px_rgba(0,230,230,0.6)]"
-              : "w-10 h-10 shadow-[0_0_16px_rgba(0,230,230,0.5)]"
+              : "w-12 h-12 sm:w-13 sm:h-13 shadow-[0_0_20px_rgba(0,230,230,0.55)]"
           } rounded-full bg-gradient-to-tr from-[#00e6e6] to-[#38bdf8] text-black flex items-center justify-center active:scale-95 transition-all cursor-pointer flex-shrink-0`}
         >
-          <BsFillPauseFill size={fullScreen ? 34 : 24} />
+          <BsFillPauseFill size={fullScreen ? 34 : 28} />
         </button>
       ) : (
         <button
@@ -97,10 +97,10 @@ const Controls = ({
           className={`${
             fullScreen
               ? "w-14 h-14 sm:w-16 sm:h-16 shadow-[0_0_30px_rgba(0,230,230,0.6)]"
-              : "w-10 h-10 shadow-[0_0_16px_rgba(0,230,230,0.5)]"
+              : "w-12 h-12 sm:w-13 sm:h-13 shadow-[0_0_20px_rgba(0,230,230,0.55)]"
           } rounded-full bg-gradient-to-tr from-[#00e6e6] to-[#38bdf8] text-black flex items-center justify-center active:scale-95 transition-all cursor-pointer pl-0.5 flex-shrink-0`}
         >
-          <BsFillPlayFill size={fullScreen ? 34 : 24} />
+          <BsFillPlayFill size={fullScreen ? 34 : 28} />
         </button>
       )}
 
@@ -110,7 +110,7 @@ const Controls = ({
         onClick={handleNextSong}
         className="text-white hover:text-[#00e6e6] active:scale-90 transition-transform p-1 cursor-pointer"
       >
-        <MdSkipNext size={fullScreen ? 36 : 28} />
+        <MdSkipNext size={fullScreen ? 36 : 30} />
       </button>
 
       <TbArrowsShuffle
