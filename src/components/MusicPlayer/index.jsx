@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   nextSong,
@@ -47,6 +47,26 @@ const MusicPlayer = () => {
   const router = useRouter();
   const [bgColor, setBgColor] = useState();
   const [showEqualizer, setShowEqualizer] = useState(false);
+  const audioRef = useRef(null);
+
+  const handleSeek = (targetTime) => {
+    const maxDur = duration || Number(activeSong?.duration) || 300;
+    const safeTime = Math.max(0, Math.min(Number(targetTime), maxDur));
+    setAppTime(safeTime);
+    setSeekTime(safeTime);
+    if (audioRef.current) {
+      audioRef.current.currentTime = safeTime;
+    }
+  };
+
+  useEffect(() => {
+    if (activeSong?.duration) {
+      const d = Number(activeSong.duration);
+      if (d > 0) setDuration(d);
+    }
+    setAppTime(0);
+    setSeekTime(0);
+  }, [activeSong?.id]);
 
   useEffect(() => {
     if (currentSongs?.length) dispatch(playPause(true));
@@ -287,11 +307,11 @@ const MusicPlayer = () => {
               {fullScreen && (
                 <Seekbar
                   value={appTime}
-                  min="0"
-                  max={duration}
+                  min={0}
+                  max={duration || Number(activeSong?.duration) || 0}
                   fullScreen={fullScreen}
-                  onInput={(event) => setSeekTime(event.target.value)}
-                  setSeekTime={setSeekTime}
+                  onSeek={handleSeek}
+                  setSeekTime={handleSeek}
                   appTime={appTime}
                 />
               )}
@@ -327,9 +347,22 @@ const MusicPlayer = () => {
                 handleNextSong={handleNextSong}
                 handlePrevSong={handlePrevSong}
                 onTimeUpdate={(event) => setAppTime(event.target.currentTime)}
-                onLoadedData={(event) => setDuration(event.target.duration)}
+                onLoadedData={(event) => {
+                  const d = event.target.duration;
+                  if (d && !isNaN(d) && isFinite(d) && d > 0) setDuration(d);
+                }}
+                onLoadedMetadata={(event) => {
+                  const d = event.target.duration;
+                  if (d && !isNaN(d) && isFinite(d) && d > 0) setDuration(d);
+                }}
+                onDurationChange={(event) => {
+                  const d = event.target.duration;
+                  if (d && !isNaN(d) && isFinite(d) && d > 0) setDuration(d);
+                }}
                 appTime={appTime}
-                setSeekTime={setSeekTime}
+                duration={duration || Number(activeSong?.duration) || 0}
+                setSeekTime={handleSeek}
+                audioRef={audioRef}
               />
             </div>
 
@@ -347,17 +380,33 @@ const MusicPlayer = () => {
           </div>
         </div>
 
-        {/* Real-time glowing progress line along bottom of compact pill */}
+        {/* Real-time interactive progress line along bottom of compact pill */}
         {!fullScreen && (
-          <div className="absolute bottom-0 inset-x-8 h-[2.5px] bg-white/10 rounded-full overflow-hidden pointer-events-none">
-            <div
-              className="h-full bg-gradient-to-r from-[#00e6e6] via-[#38bdf8] to-[#ec4899] rounded-full transition-all duration-150"
-              style={{
-                width: `${
-                  duration ? Math.min(100, Math.max(0, (appTime / duration) * 100)) : 0
-                }%`,
-              }}
-            />
+          <div
+            className="absolute bottom-0 inset-x-6 sm:inset-x-8 h-3 flex items-end pb-1 cursor-pointer z-20 group/scrub"
+            onClick={(e) => {
+              e.stopPropagation();
+              const rect = e.currentTarget.getBoundingClientRect();
+              const clickX = e.clientX - rect.left;
+              const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+              const target =
+                ratio * (duration || Number(activeSong?.duration) || 200);
+              handleSeek(target);
+            }}
+            title="Click to seek"
+          >
+            <div className="w-full h-[2.5px] group-hover/scrub:h-[4px] bg-white/10 rounded-full overflow-hidden transition-all">
+              <div
+                className="h-full bg-gradient-to-r from-[#00e6e6] via-[#38bdf8] to-[#ec4899] rounded-full transition-all duration-100"
+                style={{
+                  width: `${
+                    duration
+                      ? Math.min(100, Math.max(0, (appTime / duration) * 100))
+                      : 0
+                  }%`,
+                }}
+              />
+            </div>
           </div>
         )}
 

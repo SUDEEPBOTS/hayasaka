@@ -11,14 +11,19 @@ const Player = ({
   onEnded,
   onTimeUpdate,
   onLoadedData,
+  onLoadedMetadata,
+  onDurationChange,
   repeat,
   handlePlayPause,
   handlePrevSong,
   handleNextSong,
   setSeekTime,
   appTime,
+  duration,
+  audioRef,
 }) => {
-  const ref = useRef(null);
+  const internalRef = useRef(null);
+  const ref = audioRef || internalRef;
 
   useEffect(() => {
     if (ref.current) {
@@ -57,56 +62,82 @@ const Player = ({
               activeSong?.image?.[0]?.url ||
               "",
             sizes: "500x500",
-            type: "image/jpg",
+            type: "image/jpeg",
           },
         ],
       }
     : {};
+
   useEffect(() => {
-    // Check if the Media Session API is available in the browser environment
     if ("mediaSession" in navigator && activeSong?.name) {
-      // Set media metadata
       navigator.mediaSession.metadata = new window.MediaMetadata(mediaMetaData);
 
-      // Define media session event handlers
-      navigator.mediaSession.setActionHandler("play", onPlay);
-      navigator.mediaSession.setActionHandler("pause", onPause);
-      navigator.mediaSession.setActionHandler("previoustrack", onPreviousTrack);
-      navigator.mediaSession.setActionHandler("nexttrack", onNextTrack);
-      navigator.mediaSession.setActionHandler("seekbackward", () => {
-        setSeekTime(appTime - 5);
+      navigator.mediaSession.setActionHandler("play", () => handlePlayPause());
+      navigator.mediaSession.setActionHandler("pause", () => handlePlayPause());
+      navigator.mediaSession.setActionHandler("previoustrack", () => handlePrevSong());
+      navigator.mediaSession.setActionHandler("nexttrack", () => handleNextSong());
+
+      navigator.mediaSession.setActionHandler("seekbackward", (details) => {
+        const offset = details?.seekOffset || 5;
+        if (ref.current) {
+          const t = Math.max(0, ref.current.currentTime - offset);
+          ref.current.currentTime = t;
+          if (setSeekTime) setSeekTime(t);
+        }
       });
-      navigator.mediaSession.setActionHandler("seekforward", () => {
-        setSeekTime(appTime + 5);
+
+      navigator.mediaSession.setActionHandler("seekforward", (details) => {
+        const offset = details?.seekOffset || 5;
+        if (ref.current) {
+          const maxDur = ref.current.duration || duration || 300;
+          const t = Math.min(maxDur, ref.current.currentTime + offset);
+          ref.current.currentTime = t;
+          if (setSeekTime) setSeekTime(t);
+        }
+      });
+
+      navigator.mediaSession.setActionHandler("seekto", (details) => {
+        if (
+          details?.seekTime !== null &&
+          details?.seekTime !== undefined &&
+          ref.current
+        ) {
+          ref.current.currentTime = details.seekTime;
+          if (setSeekTime) setSeekTime(details.seekTime);
+        }
       });
     }
   }, [mediaMetaData]);
-  // media session handlers:
-  const onPlay = () => {
-    handlePlayPause();
-  };
 
-  const onPause = () => {
-    handlePlayPause();
-  };
-
-  const onPreviousTrack = () => {
-    handlePrevSong();
-  };
-
-  const onNextTrack = () => {
-    handleNextSong();
-  };
+  // Synchronize MediaSession position state for Android/iOS lock screens
+  useEffect(() => {
+    if ("mediaSession" in navigator && "setPositionState" in navigator.mediaSession) {
+      try {
+        const cur = ref.current?.currentTime || appTime || 0;
+        const dur = ref.current?.duration || duration || 0;
+        if (dur > 0 && !isNaN(dur) && isFinite(dur)) {
+          navigator.mediaSession.setPositionState({
+            duration: Math.max(0, dur),
+            playbackRate: 1.0,
+            position: Math.min(Math.max(0, cur), dur),
+          });
+        }
+      } catch (e) {}
+    }
+  }, [appTime, duration]);
 
   useEffect(() => {
     if (ref.current) {
       ref.current.volume = volume;
     }
   }, [volume]);
-  // updates audio element only on seekTime change (and not on each rerender):
+
+  // Updates audio element when seekTime changes (guards against micro-jitter loops)
   useEffect(() => {
-    if (ref.current) {
-      ref.current.currentTime = seekTime;
+    if (ref.current && typeof seekTime === "number" && !isNaN(seekTime)) {
+      if (Math.abs(ref.current.currentTime - seekTime) > 0.4) {
+        ref.current.currentTime = seekTime;
+      }
     }
   }, [seekTime]);
 
@@ -117,16 +148,21 @@ const Player = ({
           activeSong?.downloadUrl?.[4]?.url ||
           activeSong?.downloadUrl?.[3]?.url ||
           activeSong?.downloadUrl?.[2]?.url ||
+          activeSong?.downloadUrl?.[1]?.url ||
           activeSong?.downloadUrl?.[0]?.url ||
           activeSong?.audioUrl ||
-          activeSong?.url || ""
+          activeSong?.url ||
+          ""
         }
         ref={ref}
         crossOrigin="anonymous"
         loop={repeat}
+        preload="metadata"
         onEnded={onEnded}
         onTimeUpdate={onTimeUpdate}
         onLoadedData={onLoadedData}
+        onLoadedMetadata={onLoadedMetadata || onLoadedData}
+        onDurationChange={onDurationChange || onLoadedData}
       />
     </>
   );
