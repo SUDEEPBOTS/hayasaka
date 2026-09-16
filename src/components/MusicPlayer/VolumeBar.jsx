@@ -43,7 +43,13 @@ const VolumeBar = ({
   };
   return (
     <>
-      <div className="hidden min-[1180px]:flex flex-1 items-center justify-end gap-1">
+      <div
+        className={`${
+          fullScreen
+            ? "flex w-full max-w-xs sm:max-w-sm mx-auto items-center justify-center gap-2 my-2"
+            : "hidden min-[1180px]:flex flex-1 items-center justify-end gap-1"
+        }`}
+      >
         <button
           type="button"
           onClick={(e) => {
@@ -138,7 +144,9 @@ const VolumeBar = ({
           min={min}
           max={max}
           onChange={onChange}
-          className="2xl:w-24 lg:w-24 md:w-28 h-1 ml-2 accent-[#00e6e6] cursor-pointer"
+          className={`${
+            fullScreen ? "w-36 sm:w-52" : "2xl:w-24 lg:w-24 md:w-28"
+          } h-1.5 ml-2 accent-[#00e6e6] cursor-pointer bg-white/20 rounded-full`}
         />
       </div>
       {/* overlay */}

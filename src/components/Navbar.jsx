@@ -17,7 +17,11 @@ const Navbar = () => {
     <>
       <header className="sticky top-2 z-40 px-2 sm:px-4 md:px-6 my-1">
         <nav className="mx-auto max-w-7xl h-[62px] text-white flex justify-between items-center px-3 sm:px-5 rounded-2xl md:rounded-full bg-[#0a0f1d]/75 backdrop-blur-2xl border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.18)] transition-all duration-300">
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div
+            className={`items-center gap-2 sm:gap-3 ${
+              mobileSearchOpen ? "hidden md:flex" : "flex"
+            }`}
+          >
             <button
               type="button"
               aria-label="Open Navigation Menu"
@@ -26,22 +30,22 @@ const Navbar = () => {
             >
               <MdOutlineMenu className="text-2xl lg:text-2xl" />
             </button>
-            <div
-              className={`flex items-center transition-all duration-300 ${
-                mobileSearchOpen
-                  ? "opacity-0 pointer-events-none w-0 overflow-hidden md:opacity-100 md:pointer-events-auto md:w-auto md:overflow-visible"
-                  : "opacity-100"
-              }`}
-            >
+            <div className="flex items-center">
               <MeowLogo />
             </div>
           </div>
-          <div className="relative flex items-center justify-end gap-1 sm:gap-2">
+          <div
+            className={`relative flex items-center justify-end gap-1 sm:gap-2 ${
+              mobileSearchOpen ? "flex-1 w-full" : ""
+            }`}
+          >
             <Searchbar
               mobileSearchOpen={mobileSearchOpen}
               setMobileSearchOpen={setMobileSearchOpen}
             />
-            <UpdatesBell mobileSearchOpen={mobileSearchOpen} />
+            <div className={mobileSearchOpen ? "hidden md:block" : "block"}>
+              <UpdatesBell mobileSearchOpen={mobileSearchOpen} />
+            </div>
           </div>
         </nav>
       </header>

@@ -42,7 +42,7 @@ const Searchbar = ({ mobileSearchOpen, setMobileSearchOpen }) => {
       <button
         type="button"
         onClick={() => setMobileSearchOpen(true)}
-        className={`mr-3 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white transition-colors hover:border-[#00e6e6] hover:text-[#00e6e6] md:hidden ${
+        className={`mr-2 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-white transition-colors hover:border-[#00e6e6] hover:text-[#00e6e6] md:hidden ${
           mobileSearchOpen ? "hidden" : ""
         }`}
         aria-label="Open search"
@@ -53,36 +53,37 @@ const Searchbar = ({ mobileSearchOpen, setMobileSearchOpen }) => {
       <form
         onSubmit={handleSubmit}
         autoComplete="off"
-        className={`text-gray-400 transition-all duration-300 focus-within:text-gray-600 ${
+        className={`text-gray-400 transition-all duration-300 focus-within:text-white ${
           mobileSearchOpen
-            ? "fixed inset-x-0 top-0 z-50 flex h-[70px] w-screen items-center bg-[#020813] px-3 md:static md:z-auto md:h-auto md:w-auto md:bg-transparent md:px-0"
+            ? "flex flex-1 items-center w-full"
             : "hidden md:ml-auto md:flex md:items-center md:px-2 md:w-auto"
         }`}
       >
         <label htmlFor="search-field" className="sr-only">
-          Search all files
+          Search songs
         </label>
 
         <div
           className={`flex items-center transition-all duration-300 ${
             mobileSearchOpen
-              ? "w-full gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2"
+              ? "w-full gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 backdrop-blur-md shadow-inner"
               : "gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 md:w-[11rem] lg:w-[14rem] focus-within:w-[14rem] lg:focus-within:w-[18rem]"
           }`}
         >
-          <FiSearch aria-hidden="true" className="h-5 w-5 text-gray-300" />
+          <FiSearch aria-hidden="true" className="h-5 w-5 text-[#00e6e6] flex-shrink-0" />
           <input
             onFocus={handleFocus}
             onBlur={handleBlur}
             name="search-field"
             autoComplete="off"
             id="search-field"
-            className={`min-w-0 flex-1 bg-transparent outline-none text-base text-white placeholder-gray-300 transition-all duration-300 ${
+            autoFocus={mobileSearchOpen}
+            className={`min-w-0 flex-1 bg-transparent outline-none text-sm sm:text-base text-white placeholder-gray-300 transition-all duration-300 ${
               mobileSearchOpen
                 ? "w-full py-1"
                 : "w-full py-2 md:py-0 md:text-[15px]"
             }`}
-            placeholder="Search"
+            placeholder="Search songs, artists, albums..."
             type="search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -97,7 +98,7 @@ const Searchbar = ({ mobileSearchOpen, setMobileSearchOpen }) => {
             <button
               type="button"
               onClick={closeMobileSearch}
-              className="ml-1 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/80 transition-colors hover:border-[#00e6e6] hover:text-[#00e6e6] md:hidden"
+              className="ml-1 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white/80 hover:text-white hover:border-white/30 transition-colors md:hidden flex-shrink-0 cursor-pointer"
               aria-label="Close search"
             >
               <IoClose className="h-5 w-5" />

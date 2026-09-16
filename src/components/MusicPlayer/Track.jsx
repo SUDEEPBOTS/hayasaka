@@ -18,7 +18,7 @@ const Track = ({ isPlaying, isActive, activeSong, fullScreen }) => {
         <div
           className={`${
             isPlaying && isActive ? "animate-[spin_18s_linear_infinite]" : ""
-          } h-14 w-14 sm:h-14 sm:w-14 rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-white/20`}
+          } h-11 w-11 sm:h-12 sm:w-12 rounded-full overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.5)] border border-white/25 flex-shrink-0`}
         >
           <img
             src={

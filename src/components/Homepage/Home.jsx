@@ -55,11 +55,16 @@ const Home = () => {
   const playlists = Array.isArray(data?.playlists) ? data.playlists : [];
 
   return (
-    <div>
+    <div className="pt-3 sm:pt-5">
       <OnlineStatus />
-      <h1 className="text-4xl font-bold mx-2 m-9 text-white flex gap-2">
-        "{salutation}  <GiMusicalNotes />"
-      </h1>
+      <div className="px-3 sm:px-6 mb-4 sm:mb-6">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white flex items-center gap-3 tracking-tight">
+          <span className="bg-gradient-to-r from-white via-gray-100 to-[#00e6e6] bg-clip-text text-transparent">
+            {salutation}
+          </span>
+          <GiMusicalNotes className="text-[#00e6e6] text-2xl sm:text-3xl" />
+        </h1>
+      </div>
 
       <ListenAgain />
 

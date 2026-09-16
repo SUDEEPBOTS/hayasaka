@@ -16,7 +16,7 @@ const Seekbar = ({
 
   return (
     <div
-      className={` ${!fullScreen ? "hidden sm:flex" : " flex mt-5"}   flex-row items-center`}
+      className={` ${!fullScreen ? "hidden" : "flex w-full max-w-xl mx-auto px-4 my-3"} flex-row items-center gap-2`}
     >
       <button
         type="button"
@@ -24,11 +24,11 @@ const Seekbar = ({
           e.stopPropagation();
           setSeekTime(appTime - 5);
         }}
-        className="hidden lg:mr-4 lg:block text-white"
+        className="hidden sm:block text-gray-300 hover:text-white transition-colors"
       >
-        <GiFastBackwardButton size={20} className=" text-gray-300" />
+        <GiFastBackwardButton size={22} />
       </button>
-      <p className="text-white text-xs sm:text-base w-5">
+      <p className="text-gray-300 text-xs sm:text-sm font-semibold w-10 text-right select-none">
         {value === 0 ? "0:00" : getTime(value)}
       </p>
       <input
@@ -41,9 +41,9 @@ const Seekbar = ({
         min={min}
         max={max}
         onInput={onInput}
-        className="w-full max-w-[240px] sm:max-w-[320px] md:max-w-[400px] lg:max-w-[480px] h-1.5 mx-3 rounded-lg accent-[#00e6e6] cursor-pointer bg-white/20"
+        className="flex-1 h-1.5 rounded-full accent-[#00e6e6] cursor-pointer bg-white/20 hover:bg-white/30 transition-all"
       />
-      <p className="text-white text-xs sm:text-base">
+      <p className="text-gray-300 text-xs sm:text-sm font-semibold w-10 text-left select-none">
         {max === 0 ? "0:00" : getTime(max)}
       </p>
       <button

@@ -188,8 +188,8 @@ const MusicPlayer = () => {
       <div
         className={`transition-all duration-300 select-none ${
           fullScreen
-            ? "fixed inset-0 z-50 h-screen w-screen overflow-y-auto hideScrollBar px-4 sm:px-12 flex flex-col bg-[#050811]/95 backdrop-blur-3xl"
-            : "fixed bottom-3 inset-x-2 sm:inset-x-6 max-w-6xl mx-auto z-50 h-[80px] rounded-3xl bg-[#090f1d]/85 backdrop-blur-2xl border border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.7),inset_0_1px_0_rgba(255,255,255,0.18)] px-3 sm:px-6 flex flex-col justify-center cursor-pointer"
+            ? "fixed inset-0 z-50 h-screen w-screen overflow-y-auto hideScrollBar px-4 sm:px-12 flex flex-col bg-black/40 backdrop-blur-3xl border-t border-white/15"
+            : "fixed bottom-3 inset-x-2 sm:inset-x-6 max-w-5xl mx-auto z-50 h-[64px] rounded-full bg-black/35 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.25)] px-3 sm:px-6 flex flex-col justify-center cursor-pointer overflow-hidden"
         }`}
         onClick={() => {
           if (activeSong?.id) {
@@ -197,26 +197,53 @@ const MusicPlayer = () => {
           }
         }}
         style={{
-          boxShadow: fullScreen
-            ? undefined
-            : bgColor
-            ? `0 12px 40px rgba(${bgColor.red}, ${bgColor.green}, ${bgColor.blue}, 0.3), inset 0 1px 0 rgba(255,255,255,0.2)`
+          background: fullScreen
+            ? bgColor
+              ? `radial-gradient(circle at 50% 25%, rgba(${bgColor.red}, ${bgColor.green}, ${bgColor.blue}, 0.25) 0%, rgba(0,0,0,0.45) 85%)`
+              : "radial-gradient(circle at 50% 25%, rgba(0, 230, 230, 0.18) 0%, rgba(0,0,0,0.45) 85%)"
+            : undefined,
+          boxShadow: !fullScreen && bgColor
+            ? `0 8px 32px rgba(${bgColor.red}, ${bgColor.green}, ${bgColor.blue}, 0.25), inset 0 1px 0 rgba(255,255,255,0.2)`
             : undefined,
         }}
       >
-        <HiOutlineChevronDown
-          onClick={(e) => {
-            e.stopPropagation();
-            dispatch(setFullScreen(!fullScreen));
-          }}
-          className={` absolute top-16 md:top-10 right-7 text-white text-3xl cursor-pointer ${
-            fullScreen ? "hidden md:block" : "hidden"
-          }`}
-        />
+        {/* Fullscreen iOS Header */}
+        {fullScreen && (
+          <div className="sticky top-0 z-20 flex flex-col items-center pt-2 pb-2 w-full bg-transparent">
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                dispatch(setFullScreen(false));
+              }}
+              className="w-12 h-1.5 bg-white/40 hover:bg-white/70 rounded-full cursor-pointer transition-all duration-200 mb-3"
+            />
+            <div className="flex items-center justify-between w-full max-w-6xl px-2">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch(setFullScreen(false));
+                }}
+                className="p-2 sm:p-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 backdrop-blur-xl text-white transition-all active:scale-90 cursor-pointer shadow-lg"
+                aria-label="Close Fullscreen"
+              >
+                <HiOutlineChevronDown size={22} />
+              </button>
+              <div className="flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.08] border border-white/15 backdrop-blur-md">
+                <span className="w-2 h-2 rounded-full bg-[#00e6e6] animate-pulse" />
+                <span className="text-xs font-bold uppercase tracking-wider text-gray-200">
+                  Now Playing
+                </span>
+              </div>
+              <div className="w-9" />
+            </div>
+          </div>
+        )}
+
         <div
-          className={`flex flex-col  max-md:justify-center max-md:items-center ${
-            fullScreen ? "max-md:min-h-screen pb-5" : ""
-          }  `}
+          className={`flex flex-col ${
+            fullScreen ? "max-md:min-h-screen pb-6" : "w-full"
+          }`}
         >
           <FullscreenTrack
             handleNextSong={handleNextSong}
@@ -224,18 +251,26 @@ const MusicPlayer = () => {
             activeSong={activeSong}
             fullScreen={fullScreen}
           />
-          <div className=" flex items-center justify-between pt-1 sm:pt-2 w-full max-w-[1300px]">
+          <div
+            className={`flex items-center justify-between w-full ${
+              fullScreen ? "flex-col max-w-xl mx-auto mt-2" : "max-w-[1300px]"
+            }`}
+          >
             <Track
               isPlaying={isPlaying}
               isActive={isActive}
               activeSong={activeSong}
               fullScreen={fullScreen}
             />
-            <div className="flex-1 flex flex-col items-center justify-center">
+            <div
+              className={`flex flex-col items-center justify-center ${
+                fullScreen ? "w-full my-2" : "flex-1"
+              }`}
+            >
               <div
                 className={`${
                   fullScreen ? "" : "hidden"
-                }  sm:hidden flex items-center justify-center gap-4`}
+                } sm:hidden flex items-center justify-center gap-4`}
               >
                 <FavouriteButton
                   favouriteSongs={favouriteSongs}
@@ -244,12 +279,23 @@ const MusicPlayer = () => {
                   handleAddToFavourite={handleAddToFavourite}
                   style={"mb-4"}
                 />
-                <div
-                  className={`mb-3 sm:hidden flex items-center justify-center`}
-                >
+                <div className="mb-3 sm:hidden flex items-center justify-center">
                   <Downloader activeSong={activeSong} fullScreen={fullScreen} />
                 </div>
               </div>
+
+              {fullScreen && (
+                <Seekbar
+                  value={appTime}
+                  min="0"
+                  max={duration}
+                  fullScreen={fullScreen}
+                  onInput={(event) => setSeekTime(event.target.value)}
+                  setSeekTime={setSeekTime}
+                  appTime={appTime}
+                />
+              )}
+
               <Controls
                 isPlaying={isPlaying}
                 isActive={isActive}
@@ -268,15 +314,7 @@ const MusicPlayer = () => {
                 loading={loading}
                 onOpenEqualizer={() => setShowEqualizer(true)}
               />
-              <Seekbar
-                value={appTime}
-                min="0"
-                max={duration}
-                fullScreen={fullScreen}
-                onInput={(event) => setSeekTime(event.target.value)}
-                setSeekTime={setSeekTime}
-                appTime={appTime}
-              />
+
               <Player
                 activeSong={activeSong}
                 volume={volume}
@@ -294,6 +332,7 @@ const MusicPlayer = () => {
                 setSeekTime={setSeekTime}
               />
             </div>
+
             <VolumeBar
               activeSong={activeSong}
               bgColor={bgColor}
@@ -308,9 +347,25 @@ const MusicPlayer = () => {
           </div>
         </div>
 
+        {/* Real-time glowing progress line along bottom of compact pill */}
+        {!fullScreen && (
+          <div className="absolute bottom-0 inset-x-8 h-[2.5px] bg-white/10 rounded-full overflow-hidden pointer-events-none">
+            <div
+              className="h-full bg-gradient-to-r from-[#00e6e6] via-[#38bdf8] to-[#ec4899] rounded-full transition-all duration-150"
+              style={{
+                width: `${
+                  duration ? Math.min(100, Math.max(0, (appTime / duration) * 100)) : 0
+                }%`,
+              }}
+            />
+          </div>
+        )}
+
         {fullScreen && (
-          <div className=" min-[1180px]:hidden">
-            <Lyrics activeSong={activeSong} currentSongs={currentSongs} />
+          <div className="min-[1180px]:hidden mt-6">
+            <div className="rounded-3xl bg-white/[0.05] border border-white/15 backdrop-blur-2xl p-4 shadow-[0_12px_40px_rgba(0,0,0,0.4)]">
+              <Lyrics activeSong={activeSong} currentSongs={currentSongs} />
+            </div>
           </div>
         )}
       </div>

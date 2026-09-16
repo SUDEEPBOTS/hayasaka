@@ -25,85 +25,105 @@ const Controls = ({
   onOpenEqualizer,
 }) => {
   return (
-    <div className="flex items-center justify-around md:w-80 text-lg lg:w-80 2xl:w-80 gap-4 sm:gap-0">
+    <div
+      className={`flex items-center text-lg ${
+        fullScreen
+          ? "w-full max-w-md justify-around my-4 py-2"
+          : "w-auto justify-end sm:justify-around md:w-72 gap-2 sm:gap-3"
+      }`}
+    >
       <FavouriteButton
         favouriteSongs={favouriteSongs}
         activeSong={activeSong}
         loading={loading}
         handleAddToFavourite={handleAddToFavourite}
-        style={" sm:block hidden"}
+        style={fullScreen ? "block" : "hidden sm:block"}
       />
       {!repeat ? (
         <TbRepeat
           title="Repeat"
-          size={25}
+          size={fullScreen ? 26 : 22}
           color={"white"}
           onClick={(e) => {
             e.stopPropagation();
             setRepeat((prev) => !prev);
           }}
           className={`${
-            !fullScreen ? "hidden sm:block" : " m-3"
-          } cursor-pointer`}
+            !fullScreen ? "hidden sm:block" : "m-2"
+          } cursor-pointer hover:text-[#00e6e6] transition-colors`}
         />
       ) : (
         <TbRepeatOnce
           title="Repeat Once"
-          size={25}
+          size={fullScreen ? 26 : 22}
           color={repeat ? "#00e6e6" : "white"}
           onClick={(e) => {
             e.stopPropagation();
             setRepeat((prev) => !prev);
           }}
           className={`${
-            !fullScreen ? "hidden sm:block" : " m-3"
-          } cursor-pointer`}
+            !fullScreen ? "hidden sm:block" : "m-2"
+          } cursor-pointer hover:text-[#00e6e6] transition-colors`}
         />
       )}
 
-      {
-        <MdSkipPrevious
-          title="Previous"
-          size={35}
-          color={currentSongs?.length ? "#ffff" : "#b3b3b3"}
-          className="cursor-pointer"
-          onClick={handlePrevSong}
-        />
-      }
+      <button
+        type="button"
+        title="Previous"
+        onClick={handlePrevSong}
+        className="text-white hover:text-[#00e6e6] active:scale-90 transition-transform p-1 cursor-pointer"
+      >
+        <MdSkipPrevious size={fullScreen ? 36 : 28} />
+      </button>
+
       {isPlaying ? (
-        <BsFillPauseFill
-          size={45}
-          color="#00e6e6"
+        <button
+          type="button"
+          title="Pause"
           onClick={handlePlayPause}
-          className="cursor-pointer"
-        />
+          className={`${
+            fullScreen
+              ? "w-14 h-14 sm:w-16 sm:h-16 shadow-[0_0_30px_rgba(0,230,230,0.6)]"
+              : "w-10 h-10 shadow-[0_0_16px_rgba(0,230,230,0.5)]"
+          } rounded-full bg-gradient-to-tr from-[#00e6e6] to-[#38bdf8] text-black flex items-center justify-center active:scale-95 transition-all cursor-pointer flex-shrink-0`}
+        >
+          <BsFillPauseFill size={fullScreen ? 34 : 24} />
+        </button>
       ) : (
-        <BsFillPlayFill
-          size={45}
-          color="#00e6e6"
+        <button
+          type="button"
+          title="Play"
           onClick={handlePlayPause}
-          className="cursor-pointer"
-        />
+          className={`${
+            fullScreen
+              ? "w-14 h-14 sm:w-16 sm:h-16 shadow-[0_0_30px_rgba(0,230,230,0.6)]"
+              : "w-10 h-10 shadow-[0_0_16px_rgba(0,230,230,0.5)]"
+          } rounded-full bg-gradient-to-tr from-[#00e6e6] to-[#38bdf8] text-black flex items-center justify-center active:scale-95 transition-all cursor-pointer pl-0.5 flex-shrink-0`}
+        >
+          <BsFillPlayFill size={fullScreen ? 34 : 24} />
+        </button>
       )}
-      {
-        <MdSkipNext
-          title="Next"
-          size={35}
-          color={currentSongs?.length ? "#ffff" : "#b3b3b3"}
-          className="cursor-pointer"
-          onClick={handleNextSong}
-        />
-      }
+
+      <button
+        type="button"
+        title="Next"
+        onClick={handleNextSong}
+        className="text-white hover:text-[#00e6e6] active:scale-90 transition-transform p-1 cursor-pointer"
+      >
+        <MdSkipNext size={fullScreen ? 36 : 28} />
+      </button>
+
       <TbArrowsShuffle
         title="Shuffle"
-        size={25}
+        size={fullScreen ? 26 : 22}
         color={shuffle ? "#00e6e6" : "white"}
         onClick={(e) => {
           e.stopPropagation();
           setShuffle((prev) => !prev);
         }}
-        className={`${!fullScreen ? "hidden sm:block" : "m-3"} cursor-pointer`}
+        className={`${!fullScreen ? "hidden sm:block" : "m-2"} cursor-pointer hover:text-[#00e6e6] transition-colors`}
       />
+
       <button
         type="button"
         title="10-Band Equalizer"
@@ -112,12 +132,15 @@ const Controls = ({
           e.stopPropagation();
           onOpenEqualizer?.();
         }}
-        className={`${!fullScreen ? "hidden sm:flex" : "flex"} items-center justify-center p-1.5 rounded-xl text-gray-300 hover:text-[#00e6e6] hover:bg-white/10 active:scale-95 transition-all cursor-pointer`}
+        className={`${
+          !fullScreen ? "hidden sm:flex" : "flex"
+        } items-center justify-center p-2 rounded-xl text-gray-300 hover:text-[#00e6e6] hover:bg-white/10 active:scale-95 transition-all cursor-pointer`}
       >
-        <RiEqualizerLine size={24} />
+        <RiEqualizerLine size={fullScreen ? 24 : 20} />
       </button>
+
       {activeSong?.downloadUrl?.[4]?.url && (
-        <div className=" hidden sm:block mt-1 ">
+        <div className={`${!fullScreen ? "hidden sm:block" : "block"} mt-1`}>
           <Downloader activeSong={activeSong} fullScreen={fullScreen} />
         </div>
       )}
