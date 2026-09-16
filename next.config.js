@@ -1,7 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["c.saavncdn.com", "static.saavncdn.com", "www.jiosaavn.com"],
+    domains: [
+      "c.saavncdn.com",
+      "static.saavncdn.com",
+      "www.jiosaavn.com",
+      "i.ytimg.com",
+      "yt3.googleusercontent.com",
+      "img.youtube.com",
+      "i9.ytimg.com",
+    ],
   },
   async headers() {
     return [

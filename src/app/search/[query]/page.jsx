@@ -104,10 +104,11 @@ const page = ({ params }) => {
                     <div className="flex items-center gap-5">
                       <div className=" relative">
                         <img
-                          src={song?.image?.[2]?.url || song?.image?.[1]?.url || song?.image?.[0]?.url || ""}
+                          src={song?.image?.[2]?.url || song?.image?.[1]?.url || song?.image?.[0]?.url || "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg"}
                           alt={song?.title || song?.name}
                           width={50}
                           height={50}
+                          referrerPolicy="no-referrer"
                           className="mb-3 rounded object-cover"
                         />
                         <BsPlayFill
@@ -154,10 +155,11 @@ const page = ({ params }) => {
                   <Link href={`/artist/${artist?.id}`}>
                     <div className=" flex flex-col justify-center items-center">
                       <img
-                        src={artist?.image?.[2]?.url || artist?.image?.[1]?.url || artist?.image?.[0]?.url || ""}
+                        src={artist?.image?.[2]?.url || artist?.image?.[1]?.url || artist?.image?.[0]?.url || "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg"}
                         alt={artist?.name || artist?.title}
                         width={200}
                         height={200}
+                        referrerPolicy="no-referrer"
                         className="rounded-full w-32 h-32 lg:w-48 lg:h-48 object-cover"
                       />
                       <p className="lg:text-base lg:w-44 w-24 text-center text-xs font-semibold mt-3 truncate">

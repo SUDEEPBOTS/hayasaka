@@ -104,10 +104,14 @@ const SongsList = ({
               <div className="flex items-center gap-5">
                 <div className=" relative mb-3">
                   <img
-                    src={song?.image?.[2]?.url || song?.image?.[1]?.url || song?.image?.[0]?.url || ""}
-                    alt={song?.name}
+                    src={song?.image?.[2]?.url || song?.image?.[1]?.url || song?.image?.[0]?.url || "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg"}
+                    alt={song?.name || "song"}
                     width={50}
                     height={50}
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      e.currentTarget.src = "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg";
+                    }}
                     className=" rounded-lg w-12 h-12 md:w-14 md:h-14 object-cover"
                   />
                   {activeSong?.id === song?.id ? (

@@ -1,20 +1,28 @@
+import {
+  searchYouTubeSongs,
+  getYouTubeSongDetails,
+  getYouTubePlaylistDetails,
+  fetchHomePageData,
+  fetchArtistData,
+  fetchRecommendedSongs,
+  formatPlaylistItem,
+  FEATURED_PLAYLISTS,
+} from "./youtube";
+
+const isBrowser = typeof window !== "undefined";
+
 // home page data
 export async function homePageData(language) {
   try {
-    const lang = Array.isArray(language) ? language.join(",") : language?.toString() || "";
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SAAVN_API}/api/modules?language=${encodeURIComponent(lang)}`,
-      {
-        next: {
-          revalidate: 86400,
-        },
-      },
-    );
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data?.data;
+    const lang = Array.isArray(language) ? language[0] || "Hindi" : (language || "Hindi");
+    if (isBrowser) {
+      const res = await fetch(`/api/music?action=home&lang=${encodeURIComponent(lang)}`);
+      if (!res.ok) throw new Error("Failed to fetch home data");
+      return await res.json();
+    }
+    return await fetchHomePageData(lang);
   } catch (error) {
-    console.log("homePageData error:", error);
+    console.error("homePageData error:", error);
     return null;
   }
 }
@@ -22,15 +30,15 @@ export async function homePageData(language) {
 // get song data
 export async function getSongData(id) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SAAVN_API}/api/songs/${id}`,
-    );
-    if (!response.ok) return null;
-    const data = await response.json();
-    console.log("song data", data);
-    return data?.data;
+    if (isBrowser) {
+      const res = await fetch(`/api/music?action=song&id=${encodeURIComponent(id)}`);
+      if (!res.ok) throw new Error("Failed to fetch song data");
+      return await res.json();
+    }
+    const song = await getYouTubeSongDetails(id);
+    return song ? [song] : null;
   } catch (error) {
-    console.log("getSongData error:", error);
+    console.error("getSongData error:", error);
     return null;
   }
 }
@@ -38,14 +46,23 @@ export async function getSongData(id) {
 // get album data
 export async function getAlbumData(id) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SAAVN_API}/api/albums?id=${id}`,
-    );
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data?.data;
+    if (isBrowser) {
+      const res = await fetch(`/api/music?action=album&id=${encodeURIComponent(id)}`);
+      if (!res.ok) throw new Error("Failed to fetch album data");
+      return await res.json();
+    }
+    const pl = await getYouTubePlaylistDetails(id);
+    return {
+      id: pl.id,
+      name: pl.name,
+      title: pl.title,
+      description: pl.description,
+      image: pl.image,
+      artists: { primary: [{ id: "Various", name: "Various Artists" }] },
+      songs: pl.songs,
+    };
   } catch (error) {
-    console.log("getAlbumData error:", error);
+    console.error("getAlbumData error:", error);
     return null;
   }
 }
@@ -53,89 +70,85 @@ export async function getAlbumData(id) {
 // get playlist data
 export async function getplaylistData(id) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SAAVN_API}/api/playlists?id=${id}&limit=50`,
-    );
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data?.data;
+    if (isBrowser) {
+      const res = await fetch(`/api/music?action=playlist&id=${encodeURIComponent(id)}`);
+      if (!res.ok) throw new Error("Failed to fetch playlist data");
+      return await res.json();
+    }
+    return await getYouTubePlaylistDetails(id);
   } catch (error) {
-    console.log("getplaylistData error:", error);
+    console.error("getplaylistData error:", error);
     return null;
   }
 }
 
 // get Lyrics data
 export async function getlyricsData(lyricsId) {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SAAVN_API}/api/songs/${encodeURIComponent(lyricsId)}/lyrics`,
-    );
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data?.data;
-  } catch (error) {
-    console.log("getlyricsData error:", error);
-    return null;
-  }
+  return null;
 }
 
 // get artist data
 export async function getArtistData(id) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SAAVN_API}/api/artists?id=${id}`,
-    );
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data?.data;
+    if (isBrowser) {
+      const res = await fetch(`/api/music?action=artist&id=${encodeURIComponent(id)}`);
+      if (!res.ok) throw new Error("Failed to fetch artist data");
+      return await res.json();
+    }
+    return await fetchArtistData(id);
   } catch (error) {
-    console.log("getArtistData error:", error);
+    console.error("getArtistData error:", error);
     return null;
   }
 }
 
 // get artist songs
-export async function getArtistSongs(id, page) {
+export async function getArtistSongs(id, page = 1) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SAAVN_API}/api/artists/${id}/songs?page=${page}&`,
-    );
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data?.data;
+    if (isBrowser) {
+      const res = await fetch(`/api/music?action=search&q=${encodeURIComponent(id + " songs hit")}`);
+      if (!res.ok) return [];
+      const data = await res.json();
+      return data?.songs?.results || [];
+    }
+    return await searchYouTubeSongs(`${id} songs hit`, 25);
   } catch (error) {
-    console.log("getArtistSongs error:", error);
-    return null;
+    console.error("getArtistSongs error:", error);
+    return [];
   }
 }
 
 // get artist albums
-export async function getArtistAlbums(id, page) {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SAAVN_API}/api/artists/${id}/albums?page=${page}`,
-    );
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data?.data;
-  } catch (error) {
-    console.log("getArtistAlbums error:", error);
-    return null;
-  }
+export async function getArtistAlbums(id, page = 1) {
+  return [];
 }
 
 // get search data
 export async function getSearchedData(query) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SAAVN_API}/api/search?query=${query}`,
-    );
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data?.data;
+    if (isBrowser) {
+      const res = await fetch(`/api/music?action=search&q=${encodeURIComponent(query)}`);
+      if (!res.ok) throw new Error("Failed to fetch search data");
+      return await res.json();
+    }
+    const songs = await searchYouTubeSongs(query, 30);
+    const topSong = songs[0] || null;
+    return {
+      topQuery: {
+        results: topSong ? [topSong] : [],
+      },
+      songs: {
+        results: songs,
+      },
+      albums: {
+        results: songs.slice(0, 10),
+      },
+      playlists: {
+        results: FEATURED_PLAYLISTS.map(formatPlaylistItem),
+      },
+    };
   } catch (error) {
-    console.log("getSearchedData error:", error);
+    console.error("getSearchedData error:", error);
     return null;
   }
 }
@@ -151,10 +164,9 @@ export async function addFavourite(id) {
       },
     });
     if (!response.ok) return null;
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (error) {
-    console.log("Add favourite API error", error);
+    console.error("Add favourite API error", error);
     return null;
   }
 }
@@ -167,7 +179,7 @@ export async function getFavourite() {
     const data = await response.json();
     return data?.data?.favourites;
   } catch (error) {
-    console.log("Get favourite API error", error);
+    console.error("Get favourite API error", error);
     return null;
   }
 }
@@ -180,7 +192,7 @@ export async function getUserInfo() {
     const data = await response.json();
     return data?.data;
   } catch (error) {
-    console.log("Get user info API error", error);
+    console.error("Get user info API error", error);
     return null;
   }
 }
@@ -196,10 +208,9 @@ export async function resetPassword(password, confirmPassword, token) {
       },
     });
     if (!response.ok) return null;
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (error) {
-    console.log("Reset password API error", error);
+    console.error("Reset password API error", error);
     return null;
   }
 }
@@ -215,25 +226,24 @@ export async function sendResetPasswordLink(email) {
       },
     });
     if (!response.ok) return null;
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (error) {
-    console.log("Send reset password link API error", error);
+    console.error("Send reset password link API error", error);
     return null;
   }
 }
 
-// get  recommended songs
+// get recommended songs
 export async function getRecommendedSongs(artistId, songId) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SAAVN_API}/api/songs/${songId}/suggestions`,
-    );
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data?.data;
+    if (isBrowser) {
+      const res = await fetch(`/api/music?action=recommendations&artistId=${encodeURIComponent(artistId || "")}&songId=${encodeURIComponent(songId || "")}`);
+      if (!res.ok) return [];
+      return await res.json();
+    }
+    return await fetchRecommendedSongs(artistId, songId);
   } catch (error) {
-    console.log("getRecommendedSongs error:", error);
-    return null;
+    console.error("getRecommendedSongs error:", error);
+    return [];
   }
 }

@@ -9,25 +9,35 @@ const SongBar = ({ playlist, i }) => {
 
   useEffect(() => {
     const src =
-      playlist?.image?.[1]?.url ||
-      playlist?.image?.[1]?.link ||
       playlist?.image?.[2]?.url ||
-      playlist?.image?.[0]?.url;
+      playlist?.image?.[1]?.url ||
+      playlist?.image?.[0]?.url ||
+      playlist?.image?.[1]?.link;
     if (!src) return;
-    getPixels(src, (err, pixels) => {
-      if (!err && pixels?.data) {
-        const data = [...pixels.data];
-        const width = Math.round(Math.sqrt(data.length / 4));
-        const height = width;
+    try {
+      getPixels(src, (err, pixels) => {
+        if (!err && pixels?.data) {
+          const data = [...pixels.data];
+          const width = Math.round(Math.sqrt(data.length / 4));
+          const height = width;
 
-        extractColors({ data, width, height })
-          .then((colors) => {
-            setCardColor(colors);
-          })
-          .catch(console.log);
-      }
-    });
+          extractColors({ data, width, height })
+            .then((colors) => {
+              if (Array.isArray(colors) && colors.length >= 3) {
+                setCardColor(colors);
+              }
+            })
+            .catch(() => {});
+        }
+      });
+    } catch (e) {}
   }, [playlist]);
+
+  const thumbUrl =
+    playlist?.image?.[2]?.url ||
+    playlist?.image?.[1]?.url ||
+    playlist?.image?.[0]?.url ||
+    "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg";
 
   return (
     <Link href={`/playlist/${playlist?.id}`}>
@@ -47,13 +57,14 @@ const SongBar = ({ playlist, i }) => {
             width={80}
             height={80}
             loading="lazy"
-            alt="song_img"
-            srcSet={`${playlist?.image?.[0]?.url || playlist?.image?.[0]?.link || ""} 320w, ${
-              playlist?.image?.[1]?.url || playlist?.image?.[1]?.link || ""
-            } 480w, ${playlist?.image?.[2]?.url || playlist?.image?.[2]?.link || ""} 800w`}
-            sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px"
-            src={playlist?.image?.[1]?.url || playlist?.image?.[1]?.link || playlist?.image?.[2]?.url || ""}
-            className=" w-20 h-20 rounded-lg"
+            alt={playlist?.title || "playlist_img"}
+            referrerPolicy="no-referrer"
+            crossOrigin="anonymous"
+            src={thumbUrl}
+            onError={(e) => {
+              e.currentTarget.src = "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg";
+            }}
+            className="w-20 h-20 rounded-lg object-cover"
           />
           <div className="flex-1 flex flex-col justify-center mx-3">
             <p className="font-semibold text-base w-40 lg:text-xl text-white truncate md:w-full">

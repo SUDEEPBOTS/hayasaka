@@ -1,18 +1,16 @@
 import mongoose from "mongoose"
 
 const MONGODB_URL = process.env.MONGODB_URL;
-const DB_NAME = process.env.DB_NAME;
+const DB_NAME = process.env.DB_NAME || "stroge_public";
 
-if (!MONGODB_URL) {
-    throw new Error(
-        "Please define the MONGODB_URI environment variable inside .env.local"
-    )
-}
 
 
 const dbConnect = async () => {
+    if (!MONGODB_URL) {
+        return;
+    }
     if (mongoose.connection.readyState >= 1) {
-        return
+        return;
     }
     return mongoose.connect(MONGODB_URL, {
         dbName: DB_NAME,

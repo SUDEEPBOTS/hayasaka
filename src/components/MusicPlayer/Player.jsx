@@ -103,7 +103,17 @@ const Player = ({
   return (
     <>
       <audio
-        src={activeSong?.downloadUrl?.[4]?.url || activeSong?.downloadUrl?.[3]?.url || activeSong?.downloadUrl?.[2]?.url || ""}
+        src={
+          activeSong?.downloadUrl?.[4]?.url ||
+          activeSong?.downloadUrl?.[3]?.url ||
+          activeSong?.downloadUrl?.[2]?.url ||
+          activeSong?.downloadUrl?.[0]?.url ||
+          activeSong?.audioUrl ||
+          activeSong?.url ||
+          (activeSong?.id
+            ? `https://music.yukiapi.site/stream/${activeSong.id}?key=yuki_16b7e9168529decf6721f48a8c97c4b2&type=audio&quality=128`
+            : "")
+        }
         ref={ref}
         loop={repeat}
         onEnded={onEnded}
