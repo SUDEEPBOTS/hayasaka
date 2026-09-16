@@ -2,20 +2,20 @@
 // If the domain ever changes again, update SITE_URL only.
 
 export const SITE_URL = "https://hayasaka.8man.in";
-export const SITE_NAME = "Hayasaka";
-export const SITE_BRAND = "Hayasaka Music";
-export const SITE_TAGLINE = "Free Music Streaming, MP3 Download & Playlists";
+export const SITE_NAME = "Meow";
+export const SITE_BRAND = "Meow Music";
+export const SITE_TAGLINE = "High Fidelity Streaming, MP3 Downloads & 10-Band Studio EQ";
 
 export const DEFAULT_TITLE = `${SITE_NAME} - ${SITE_TAGLINE}`;
 export const DEFAULT_DESCRIPTION =
-  "Hayasaka is a free music streaming platform. Listen to Bollywood, Hindi, Punjabi, English and regional songs in high quality. Download MP3, build playlists, follow artists, and discover new releases - all without paywalls.";
+  "Meow is a modern liquid-glass music streaming experience with a 10-band studio equalizer, real-time visualizer, and free high quality streaming without ads.";
 
 export const DEFAULT_KEYWORDS = [
-  "hayasaka",
-  "hayasaka music",
-  "hayasaka app",
-  "hayasaka.8man.in",
+  "meow",
+  "meow music",
+  "meow app",
   "music streaming",
+  "equalizer music player",
   "free music streaming",
   "free music download",
   "mp3 download",
@@ -31,13 +31,11 @@ export const DEFAULT_KEYWORDS = [
   "trending songs",
   "new songs 2026",
   "music playlists",
-  "create playlist online",
-  "music app",
   "high quality audio streaming",
 ];
 
 export const OG_IMAGE = "/icon-512x512.png";
-export const TWITTER_HANDLE = "@hayasaka_music";
+export const TWITTER_HANDLE = "@meow_music";
 
 export const ORG_CONTACT_EMAIL = "fryingpanuu@gmail.com";
 

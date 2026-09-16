@@ -1,41 +1,35 @@
 import React from "react";
-import logoWhite from "../../assets/logoWhite.png";
 import Languages from "./Languages";
 import Favourites from "./Favourites";
 import { FaGithub } from "react-icons/fa";
 import { MdOutlineMenu } from "react-icons/md";
-import Image from "next/image";
 import Link from "next/link";
 import Profile from "./Profile";
 import { useDispatch } from "react-redux";
 import Playlists from "./Playlists";
 import { setProgress } from "@/redux/features/loadingBarSlice";
+import MeowLogo from "../MeowLogo";
 
 const Sidebar = ({ showNav, setShowNav }) => {
   const dispatch = useDispatch();
   return (
     <div
       className={`${
-        showNav ? "" : "translate-x-[-100%]"
-      } transition-all duration-200  h-screen lg:w-[300px] md:w-[250px] w-[65vw] fixed top-0 left-0 z-40 bg-[#020813] flex flex-col justify-between`}
+        showNav ? "translate-x-0" : "-translate-x-full"
+      } transition-transform duration-300 ease-out h-screen lg:w-[300px] md:w-[260px] w-[75vw] fixed top-0 left-0 z-50 bg-[#060b16]/90 backdrop-blur-2xl border-r border-white/10 shadow-[8px_0_32px_rgba(0,0,0,0.6)] flex flex-col justify-between`}
     >
       <div>
-        <div className=" flex mt-3">
-          <MdOutlineMenu
+        <div className="flex items-center gap-2 mt-4 px-3">
+          <button
+            type="button"
+            aria-label="Close Navigation Menu"
             onClick={() => setShowNav(false)}
-            className=" mx-4 text-2xl lg:text-3xl my-auto text-white cursor-pointer"
-          />
-          <div className=" flex justify-center items-center">
-            <Link href="/">
-              <Image
-                onClick={() => {
-                  dispatch(setProgress(100));
-                }}
-                src={logoWhite}
-                alt="logo"
-                className=" lg:py-2 aspect-video w-[139px] h-[31px] lg:h-[60px] lg:w-[190px]"
-              />
-            </Link>
+            className="p-2 rounded-xl text-gray-200 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+          >
+            <MdOutlineMenu className="text-2xl lg:text-3xl text-white" />
+          </button>
+          <div className="flex items-center">
+            <MeowLogo />
           </div>
         </div>
         <div className=" mt-7 pb-7 border-b border-gray-400 w-[95%]">

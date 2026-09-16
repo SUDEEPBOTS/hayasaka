@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import FavouriteButton from "./FavouriteButton";
 import getPixels from "get-pixels";
 import { extractColors } from "extract-colors";
+import EqualizerModal from "./EqualizerModal";
 
 const MusicPlayer = () => {
   const {
@@ -45,6 +46,7 @@ const MusicPlayer = () => {
   const { status } = useSession();
   const router = useRouter();
   const [bgColor, setBgColor] = useState();
+  const [showEqualizer, setShowEqualizer] = useState(false);
 
   useEffect(() => {
     if (currentSongs?.length) dispatch(playPause(true));
@@ -177,130 +179,147 @@ const MusicPlayer = () => {
     }
   };
 
+  if (!activeSong?.name && !activeSong?.id && (!currentSongs || currentSongs.length === 0)) {
+    return null;
+  }
+
   return (
-    <div
-      className={`relative overflow-scroll items-center min-[1180px]:items-stretch min-[1180px]:overflow-visible hideScrollBar sm:px-12  flex flex-col transition-all duration-100 ${
-        fullScreen ? "h-[100vh] w-[100vw]" : "w-full h-20 px-8 bg-black "
-      }`}
-      onClick={() => {
-        if (activeSong?.id) {
-          dispatch(setFullScreen(!fullScreen));
-        }
-      }}
-      style={{
-        backgroundColor: bgColor
-          ? `rgba(${bgColor.red}, ${bgColor.green}, ${bgColor.blue}, 0.2)`
-          : "rgba(0,0,0,0.2)",
-      }}
-    >
-      <HiOutlineChevronDown
-        onClick={(e) => {
-          e.stopPropagation();
-          dispatch(setFullScreen(!fullScreen));
-        }}
-        className={` absolute top-16 md:top-10 right-7 text-white text-3xl cursor-pointer ${
-          fullScreen ? "hidden md:block" : "hidden"
-        }`}
-      />
+    <>
       <div
-        className={`flex flex-col  max-md:justify-center max-md:items-center ${
-          fullScreen ? "max-md:min-h-screen pb-5" : ""
-        }  `}
+        className={`transition-all duration-300 select-none ${
+          fullScreen
+            ? "fixed inset-0 z-50 h-screen w-screen overflow-y-auto hideScrollBar px-4 sm:px-12 flex flex-col bg-[#050811]/95 backdrop-blur-3xl"
+            : "fixed bottom-3 inset-x-2 sm:inset-x-6 max-w-6xl mx-auto z-50 h-[80px] rounded-3xl bg-[#090f1d]/85 backdrop-blur-2xl border border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.7),inset_0_1px_0_rgba(255,255,255,0.18)] px-3 sm:px-6 flex flex-col justify-center cursor-pointer"
+        }`}
+        onClick={() => {
+          if (activeSong?.id) {
+            dispatch(setFullScreen(!fullScreen));
+          }
+        }}
+        style={{
+          boxShadow: fullScreen
+            ? undefined
+            : bgColor
+            ? `0 12px 40px rgba(${bgColor.red}, ${bgColor.green}, ${bgColor.blue}, 0.3), inset 0 1px 0 rgba(255,255,255,0.2)`
+            : undefined,
+        }}
       >
-        <FullscreenTrack
-          handleNextSong={handleNextSong}
-          handlePrevSong={handlePrevSong}
-          activeSong={activeSong}
-          fullScreen={fullScreen}
+        <HiOutlineChevronDown
+          onClick={(e) => {
+            e.stopPropagation();
+            dispatch(setFullScreen(!fullScreen));
+          }}
+          className={` absolute top-16 md:top-10 right-7 text-white text-3xl cursor-pointer ${
+            fullScreen ? "hidden md:block" : "hidden"
+          }`}
         />
-        <div className=" flex items-center justify-between pt-2 max-w-[1300px]">
-          <Track
-            isPlaying={isPlaying}
-            isActive={isActive}
+        <div
+          className={`flex flex-col  max-md:justify-center max-md:items-center ${
+            fullScreen ? "max-md:min-h-screen pb-5" : ""
+          }  `}
+        >
+          <FullscreenTrack
+            handleNextSong={handleNextSong}
+            handlePrevSong={handlePrevSong}
             activeSong={activeSong}
             fullScreen={fullScreen}
           />
-          <div className="flex-1 flex flex-col items-center justify-center">
-            <div
-              className={`${
-                fullScreen ? "" : "hidden"
-              }  sm:hidden flex items-center justify-center gap-4`}
-            >
-              <FavouriteButton
-                favouriteSongs={favouriteSongs}
-                activeSong={activeSong}
-                loading={loading}
-                handleAddToFavourite={handleAddToFavourite}
-                style={"mb-4"}
-              />
-              <div
-                className={`mb-3 sm:hidden flex items-center justify-center`}
-              >
-                <Downloader activeSong={activeSong} fullScreen={fullScreen} />
-              </div>
-            </div>
-            <Controls
+          <div className=" flex items-center justify-between pt-1 sm:pt-2 w-full max-w-[1300px]">
+            <Track
               isPlaying={isPlaying}
               isActive={isActive}
-              repeat={repeat}
-              setRepeat={setRepeat}
-              shuffle={shuffle}
-              setShuffle={setShuffle}
-              currentSongs={currentSongs}
               activeSong={activeSong}
               fullScreen={fullScreen}
-              handlePlayPause={handlePlayPause}
-              handlePrevSong={handlePrevSong}
-              handleNextSong={handleNextSong}
-              handleAddToFavourite={handleAddToFavourite}
-              favouriteSongs={favouriteSongs}
-              loading={loading}
             />
-            <Seekbar
-              value={appTime}
+            <div className="flex-1 flex flex-col items-center justify-center">
+              <div
+                className={`${
+                  fullScreen ? "" : "hidden"
+                }  sm:hidden flex items-center justify-center gap-4`}
+              >
+                <FavouriteButton
+                  favouriteSongs={favouriteSongs}
+                  activeSong={activeSong}
+                  loading={loading}
+                  handleAddToFavourite={handleAddToFavourite}
+                  style={"mb-4"}
+                />
+                <div
+                  className={`mb-3 sm:hidden flex items-center justify-center`}
+                >
+                  <Downloader activeSong={activeSong} fullScreen={fullScreen} />
+                </div>
+              </div>
+              <Controls
+                isPlaying={isPlaying}
+                isActive={isActive}
+                repeat={repeat}
+                setRepeat={setRepeat}
+                shuffle={shuffle}
+                setShuffle={setShuffle}
+                currentSongs={currentSongs}
+                activeSong={activeSong}
+                fullScreen={fullScreen}
+                handlePlayPause={handlePlayPause}
+                handlePrevSong={handlePrevSong}
+                handleNextSong={handleNextSong}
+                handleAddToFavourite={handleAddToFavourite}
+                favouriteSongs={favouriteSongs}
+                loading={loading}
+                onOpenEqualizer={() => setShowEqualizer(true)}
+              />
+              <Seekbar
+                value={appTime}
+                min="0"
+                max={duration}
+                fullScreen={fullScreen}
+                onInput={(event) => setSeekTime(event.target.value)}
+                setSeekTime={setSeekTime}
+                appTime={appTime}
+              />
+              <Player
+                activeSong={activeSong}
+                volume={volume}
+                isPlaying={isPlaying}
+                seekTime={seekTime}
+                repeat={repeat}
+                currentIndex={currentIndex}
+                onEnded={handleNextSong}
+                handlePlayPause={handlePlayPause}
+                handleNextSong={handleNextSong}
+                handlePrevSong={handlePrevSong}
+                onTimeUpdate={(event) => setAppTime(event.target.currentTime)}
+                onLoadedData={(event) => setDuration(event.target.duration)}
+                appTime={appTime}
+                setSeekTime={setSeekTime}
+              />
+            </div>
+            <VolumeBar
+              activeSong={activeSong}
+              bgColor={bgColor}
+              fullScreen={fullScreen}
+              value={volume}
               min="0"
-              max={duration}
-              fullScreen={fullScreen}
-              onInput={(event) => setSeekTime(event.target.value)}
-              setSeekTime={setSeekTime}
-              appTime={appTime}
-            />
-            <Player
-              activeSong={activeSong}
-              volume={volume}
-              isPlaying={isPlaying}
-              seekTime={seekTime}
-              repeat={repeat}
-              currentIndex={currentIndex}
-              onEnded={handleNextSong}
-              handlePlayPause={handlePlayPause}
-              handleNextSong={handleNextSong}
-              handlePrevSong={handlePrevSong}
-              onTimeUpdate={(event) => setAppTime(event.target.currentTime)}
-              onLoadedData={(event) => setDuration(event.target.duration)}
-              appTime={appTime}
-              setSeekTime={setSeekTime}
+              max="1"
+              onChange={(event) => setVolume(event.target.value)}
+              setVolume={setVolume}
+              onOpenEqualizer={() => setShowEqualizer(true)}
             />
           </div>
-          <VolumeBar
-            activeSong={activeSong}
-            bgColor={bgColor}
-            fullScreen={fullScreen}
-            value={volume}
-            min="0"
-            max="1"
-            onChange={(event) => setVolume(event.target.value)}
-            setVolume={setVolume}
-          />
         </div>
+
+        {fullScreen && (
+          <div className=" min-[1180px]:hidden">
+            <Lyrics activeSong={activeSong} currentSongs={currentSongs} />
+          </div>
+        )}
       </div>
 
-      {fullScreen && (
-        <div className=" min-[1180px]:hidden">
-          <Lyrics activeSong={activeSong} currentSongs={currentSongs} />
-        </div>
-      )}
-    </div>
+      <EqualizerModal
+        isOpen={showEqualizer}
+        onClose={() => setShowEqualizer(false)}
+      />
+    </>
   );
 };
 

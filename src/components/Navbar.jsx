@@ -1,15 +1,13 @@
 "use client";
 import React from "react";
-import logo from "../assets/hayasaka.png";
-import Image from "next/image";
 import Searchbar from "./Searchbar";
 import UpdatesBell from "./UpdatesBell";
-import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { setProgress } from "@/redux/features/loadingBarSlice";
 import { MdOutlineMenu } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import Sidebar from "./Sidebar/Sidebar";
+import MeowLogo from "./MeowLogo";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -17,35 +15,36 @@ const Navbar = () => {
   const [mobileSearchOpen, setMobileSearchOpen] = React.useState(false);
   return (
     <>
-      <div className="bg-[#020813] h-[70px] text-white flex justify-between relative items-center overflow-visible">
-        <div className=" flex">
-          <MdOutlineMenu
-            onClick={() => setShowNav(true)}
-            className=" mx-4 text-2xl lg:text-3xl my-auto cursor-pointer"
-          />
-          <div
-            className={`flex justify-center items-center transition-all duration-300 ${mobileSearchOpen ? "opacity-0 pointer-events-none w-0 overflow-hidden md:opacity-100 md:pointer-events-auto md:w-auto md:overflow-visible" : "opacity-100"}`}
-          >
-            <Link href="/">
-              <Image
-                onClick={() => {
-                  dispatch(setProgress(100));
-                }}
-                src={logo}
-                alt="logo"
-                className=" lg:py-2  aspect-video w-[135px] h-[30.741px] lg:h-[58px] lg:w-[190px]"
-              />
-            </Link>
+      <header className="sticky top-2 z-40 px-2 sm:px-4 md:px-6 my-1">
+        <nav className="mx-auto max-w-7xl h-[62px] text-white flex justify-between items-center px-3 sm:px-5 rounded-2xl md:rounded-full bg-[#0a0f1d]/75 backdrop-blur-2xl border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.18)] transition-all duration-300">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              aria-label="Open Navigation Menu"
+              onClick={() => setShowNav(true)}
+              className="p-2 rounded-xl text-gray-200 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+            >
+              <MdOutlineMenu className="text-2xl lg:text-2xl" />
+            </button>
+            <div
+              className={`flex items-center transition-all duration-300 ${
+                mobileSearchOpen
+                  ? "opacity-0 pointer-events-none w-0 overflow-hidden md:opacity-100 md:pointer-events-auto md:w-auto md:overflow-visible"
+                  : "opacity-100"
+              }`}
+            >
+              <MeowLogo />
+            </div>
           </div>
-        </div>
-        <div className="relative flex items-center justify-end">
-          <Searchbar
-            mobileSearchOpen={mobileSearchOpen}
-            setMobileSearchOpen={setMobileSearchOpen}
-          />
-          <UpdatesBell mobileSearchOpen={mobileSearchOpen} />
-        </div>
-      </div>
+          <div className="relative flex items-center justify-end gap-1 sm:gap-2">
+            <Searchbar
+              mobileSearchOpen={mobileSearchOpen}
+              setMobileSearchOpen={setMobileSearchOpen}
+            />
+            <UpdatesBell mobileSearchOpen={mobileSearchOpen} />
+          </div>
+        </nav>
+      </header>
 
       <Sidebar showNav={showNav} setShowNav={setShowNav} />
       {/* overlay */}

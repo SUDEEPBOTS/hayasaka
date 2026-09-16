@@ -5,6 +5,7 @@ import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs";
 import { TbRepeat, TbRepeatOnce, TbArrowsShuffle } from "react-icons/tb";
 import Downloader from "./Downloader";
 import FavouriteButton from "./FavouriteButton";
+import { RiEqualizerLine } from "react-icons/ri";
 
 const Controls = ({
   isPlaying,
@@ -21,6 +22,7 @@ const Controls = ({
   handleAddToFavourite,
   favouriteSongs,
   loading,
+  onOpenEqualizer,
 }) => {
   return (
     <div className="flex items-center justify-around md:w-80 text-lg lg:w-80 2xl:w-80 gap-4 sm:gap-0">
@@ -102,6 +104,18 @@ const Controls = ({
         }}
         className={`${!fullScreen ? "hidden sm:block" : "m-3"} cursor-pointer`}
       />
+      <button
+        type="button"
+        title="10-Band Equalizer"
+        aria-label="Open Equalizer"
+        onClick={(e) => {
+          e.stopPropagation();
+          onOpenEqualizer?.();
+        }}
+        className={`${!fullScreen ? "hidden sm:flex" : "flex"} items-center justify-center p-1.5 rounded-xl text-gray-300 hover:text-[#00e6e6] hover:bg-white/10 active:scale-95 transition-all cursor-pointer`}
+      >
+        <RiEqualizerLine size={24} />
+      </button>
       {activeSong?.downloadUrl?.[4]?.url && (
         <div className=" hidden sm:block mt-1 ">
           <Downloader activeSong={activeSong} fullScreen={fullScreen} />

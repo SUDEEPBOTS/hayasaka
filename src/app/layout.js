@@ -7,7 +7,7 @@ import Favicon from "./favicon.ico";
 import SongsHistory from "@/components/SongsHistory";
 import { Toaster } from "react-hot-toast";
 import AuthProvider from "./AuthProvider";
-import { Poppins } from "next/font/google";
+import { Outfit, Quicksand } from "next/font/google";
 import Script from "next/script";
 import {
   SITE_URL,
@@ -21,9 +21,17 @@ import {
   absoluteUrl,
 } from "@/utils/siteConfig";
 
-const poppins = Poppins({
-  weight: "500",
-  subsets: ["latin-ext"],
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
+
+const quicksand = Quicksand({
+  subsets: ["latin"],
+  variable: "--font-quicksand",
+  weight: ["500", "600", "700"],
   display: "swap",
 });
 
@@ -200,34 +208,34 @@ const jsonLd = {
       mainEntity: [
         {
           "@type": "Question",
-          name: "Is Hayasaka free to use?",
+          name: "Is Meow free to use?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Hayasaka is completely free. You can stream and download music, build playlists, and follow artists without paying anything.",
+            text: "Yes. Meow is completely free. You can stream and download music, tune the 10-band equalizer, build playlists, and follow artists without paying anything.",
           },
         },
         {
           "@type": "Question",
-          name: "Do I need to sign up to listen on Hayasaka?",
+          name: "Do I need to sign up to listen on Meow?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "You can stream music on Hayasaka without an account. Sign up only if you want to save favorites and create personal playlists synced across devices.",
+            text: "You can stream music on Meow without an account. Sign up only if you want to save favorites and create personal playlists synced across devices.",
           },
         },
         {
           "@type": "Question",
-          name: "What languages of songs are available on Hayasaka?",
+          name: "What languages of songs are available on Meow?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Hayasaka covers Hindi, English, Punjabi, Tamil, Telugu, Bhojpuri, Marathi, Bengali, Gujarati, and more, including Bollywood and indie tracks.",
+            text: "Meow covers Hindi, English, Punjabi, Tamil, Telugu, Bhojpuri, Marathi, Bengali, Gujarati, and more, including Bollywood and indie tracks.",
           },
         },
         {
           "@type": "Question",
-          name: "Can I download MP3 songs from Hayasaka?",
+          name: "Can I download MP3 songs from Meow?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Each track on Hayasaka offers a download option so you can save songs in MP3 format for offline listening.",
+            text: "Yes. Each track on Meow offers a download option so you can save songs in MP3 format for offline listening.",
           },
         },
       ],
@@ -258,7 +266,7 @@ export default function RootLayout({ children }) {
   gtag('config', 'G-Z4FJ5T627Q');
   `}
       </Script>
-      <body className={poppins.className}>
+      <body className={`${outfit.className} ${outfit.variable} ${quicksand.variable} antialiased`}>
         <Providers>
           <AuthProvider>
             <TopProgressBar />
@@ -266,10 +274,8 @@ export default function RootLayout({ children }) {
             <Navbar />
             <Toaster />
             {children}
-            <div className="h-20"></div>
-            <div className="fixed  bottom-0 left-0 right-0 flex backdrop-blur-lg rounded-t-3 z-50">
-              <MusicPlayer />
-            </div>
+            <div className="h-28"></div>
+            <MusicPlayer />
           </AuthProvider>
         </Providers>
       </body>

@@ -5,6 +5,7 @@ import {
   BsFillVolumeMuteFill,
 } from "react-icons/bs";
 import { BiAddToQueue } from "react-icons/bi";
+import { RiEqualizerLine } from "react-icons/ri";
 import { addSongToPlaylist, getUserPlaylists } from "@/services/playlistApi";
 import { toast } from "react-hot-toast";
 
@@ -16,6 +17,7 @@ const VolumeBar = ({
   setVolume,
   activeSong,
   bgColor,
+  onOpenEqualizer,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [playlists, setPlaylists] = useState([]);
@@ -41,7 +43,19 @@ const VolumeBar = ({
   };
   return (
     <>
-      <div className="hidden min-[1180px]:flex flex-1 items-center justify-end">
+      <div className="hidden min-[1180px]:flex flex-1 items-center justify-end gap-1">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenEqualizer?.();
+          }}
+          title="10-Band Studio Equalizer"
+          className="flex items-center gap-1.5 px-3 py-1.5 mr-2 rounded-xl bg-white/[0.06] hover:bg-white/15 border border-white/15 text-gray-200 hover:text-[#00e6e6] active:scale-95 transition-all text-xs font-semibold cursor-pointer shadow-[0_2px_10px_rgba(0,0,0,0.3)]"
+        >
+          <RiEqualizerLine size={17} className="text-[#00e6e6]" />
+          <span>EQ</span>
+        </button>
         <div className=" relative">
           <BiAddToQueue
             onClick={(e) => {

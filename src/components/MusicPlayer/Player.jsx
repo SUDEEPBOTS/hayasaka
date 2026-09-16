@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable jsx-a11y/media-has-caption */
 import React, { useRef, useEffect } from "react";
+import { initAudioGraph, resumeAudioGraph } from "./audioGraph";
 
 const Player = ({
   activeSong,
@@ -18,14 +19,23 @@ const Player = ({
   appTime,
 }) => {
   const ref = useRef(null);
-  // eslint-disable-next-line no-unused-expressions
-  if (ref.current) {
-    if (isPlaying) {
-      ref.current.play();
-    } else {
-      ref.current.pause();
+
+  useEffect(() => {
+    if (ref.current) {
+      initAudioGraph(ref.current);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    if (ref.current) {
+      if (isPlaying) {
+        resumeAudioGraph();
+        ref.current.play()?.catch?.(() => {});
+      } else {
+        ref.current.pause();
+      }
+    }
+  }, [isPlaying, activeSong]);
 
   const artistName = Array.isArray(activeSong?.artists?.primary)
     ? activeSong.artists.primary.map((a) => a?.name).join(", ")
@@ -112,6 +122,7 @@ const Player = ({
           activeSong?.url || ""
         }
         ref={ref}
+        crossOrigin="anonymous"
         loop={repeat}
         onEnded={onEnded}
         onTimeUpdate={onTimeUpdate}

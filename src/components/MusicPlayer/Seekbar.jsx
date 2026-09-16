@@ -41,7 +41,7 @@ const Seekbar = ({
         min={min}
         max={max}
         onInput={onInput}
-        className="md:block w-[70vw] min-[1085px]:w-[650px] md:w-[250px] 2xl:w-[50vw] h-1 mx-4 2xl:mx-6 rounded-lg accent-[#00e6e6] cursor-pointer"
+        className="w-full max-w-[240px] sm:max-w-[320px] md:max-w-[400px] lg:max-w-[480px] h-1.5 mx-3 rounded-lg accent-[#00e6e6] cursor-pointer bg-white/20"
       />
       <p className="text-white text-xs sm:text-base">
         {max === 0 ? "0:00" : getTime(max)}
