@@ -28,43 +28,49 @@ const ListenAgainCard = ({ song, index, SongData }) => {
     "";
 
   return (
-    <div>
+    <div className="w-full">
       <div
         onClick={() => {
           handlePlayClick(song, index);
         }}
-        className={`flex w-40 md:w-80 items-center mt-5 cursor-pointer group border-b-[1px] border-gray-400 justify-between ${
-          activeSong?.id === song?.id && " text-[#00e6e6]"
+        className={`flex w-full items-center p-2.5 rounded-2xl backdrop-blur-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 transition-all duration-200 cursor-pointer group shadow-sm hover:shadow-md ${
+          activeSong?.id === song?.id ? "border-[#00e6e6]/40 bg-white/[0.08]" : ""
         }`}
       >
-        <div className="flex items-center gap-5">
-          <div className=" relative mb-2">
-            <div className="group w-12 h-12 md:w-14 md:h-14 relative">
+        <div className="flex items-center gap-3.5 flex-1 min-w-0">
+          <div className="relative flex-shrink-0">
+            <div className="group w-12 h-12 md:w-14 md:h-14 relative rounded-xl overflow-hidden shadow-sm">
               <img
-                src={song?.image?.[2]?.url || song?.image?.[1]?.url || song?.image?.[2]?.link || ""}
+                src={song?.image?.[2]?.url || song?.image?.[1]?.url || song?.image?.[2]?.link || "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg"}
                 alt={song?.name}
-                width={50}
-                height={50}
-                className="rounded-lg object-cover w-12 h-12 md:w-14 md:h-14"
+                width={56}
+                height={56}
+                className="rounded-xl object-cover w-12 h-12 md:w-14 md:h-14 group-hover:scale-105 transition-transform"
               />
             </div>
             {activeSong?.id === song?.id ? (
-              <BiHeadphone
-                size={27}
-                className=" absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#00e6e6]"
-              />
+              <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px] rounded-xl flex items-center justify-center">
+                <BiHeadphone
+                  size={24}
+                  className="text-[#00e6e6] animate-pulse"
+                />
+              </div>
             ) : (
-              <BsPlayFill
-                size={25}
-                className=" group-hover:block hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-gray-200"
-              />
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
+                <BsPlayFill
+                  size={26}
+                  className="text-white ml-0.5"
+                />
+              </div>
             )}
           </div>
-          <div className=" w-24 md:w-64">
-            <p className="text-sm lg:text-lg font-semibold truncate">
+          <div className="flex-1 min-w-0">
+            <p className={`text-sm lg:text-base font-bold truncate ${
+              activeSong?.id === song?.id ? "text-[#00e6e6]" : "text-white"
+            }`}>
               {song?.name?.replace("&#039;", "'")?.replace("&amp;", "&")}
             </p>
-            <p className="text-gray-400 truncate text-xs">
+            <p className="text-gray-400 truncate text-xs mt-0.5 font-medium">
               {artistDisplay}
             </p>
           </div>

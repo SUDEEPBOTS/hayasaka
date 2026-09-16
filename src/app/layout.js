@@ -7,7 +7,7 @@ import Favicon from "./favicon.ico";
 import SongsHistory from "@/components/SongsHistory";
 import { Toaster } from "react-hot-toast";
 import AuthProvider from "./AuthProvider";
-import { Outfit, Quicksand } from "next/font/google";
+import { Outfit, Plus_Jakarta_Sans, Quicksand } from "next/font/google";
 import Script from "next/script";
 import {
   SITE_URL,
@@ -24,6 +24,13 @@ import {
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  display: "swap",
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
   weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
@@ -266,7 +273,7 @@ export default function RootLayout({ children }) {
   gtag('config', 'G-Z4FJ5T627Q');
   `}
       </Script>
-      <body className={`${outfit.className} ${outfit.variable} ${quicksand.variable} antialiased`}>
+      <body className={`${outfit.className} ${outfit.variable} ${plusJakarta.variable} ${quicksand.variable} antialiased`}>
         <Providers>
           <AuthProvider>
             <TopProgressBar />

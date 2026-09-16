@@ -12,22 +12,22 @@ const SwiperLayout = ({ children, title }) => {
 
   return (
     <div className=" my-4 lg:mt-14">
-      <div className=" flex justify-between">
-        <h2 className=" text-white mt-4 text-2xl lg:text-3xl font-semibold mb-4 ">
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="text-white text-2xl lg:text-3xl font-extrabold tracking-tight">
           {title}
         </h2>
-        <div className=" hidden md:flex gap-1">
+        <div className="hidden md:flex items-center gap-2">
           <div
             ref={ablumPrv}
-            className=" m-4 mb-5 border border-white rounded-full cursor-pointer"
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-white/[0.06] hover:bg-white/20 border border-white/15 backdrop-blur-xl cursor-pointer transition-all duration-200 active:scale-90 text-white shadow-sm"
           >
-            <MdNavigateBefore size={35} className="text-white text-xl" />
+            <MdNavigateBefore size={24} />
           </div>
           <div
             ref={albumNext}
-            className=" m-4 mb-5 border border-white rounded-full cursor-pointer"
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-white/[0.06] hover:bg-white/20 border border-white/15 backdrop-blur-xl cursor-pointer transition-all duration-200 active:scale-90 text-white shadow-sm"
           >
-            <MdNavigateNext size={35} className="text-white text-xl" />
+            <MdNavigateNext size={24} />
           </div>
         </div>
       </div>

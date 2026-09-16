@@ -87,7 +87,7 @@ const SongCard = ({ song, isPlaying, activeSong }) => {
   return (
     <div
       key={song?.id}
-      className="flex flex-col xl:w-[205px] p-2 bg-white/5 bg-opacity-80 backdrop-blur-sm rounded-lg cursor-pointer"
+      className="flex flex-col xl:w-[205px] p-2.5 bg-white/[0.04] hover:bg-white/[0.09] backdrop-blur-xl border border-white/10 hover:border-white/25 rounded-2xl sm:rounded-3xl shadow-lg hover:shadow-[0_12px_32px_rgba(0,0,0,0.5)] transition-all duration-300 cursor-pointer group/card"
     >
       <Link
         onClick={(e) => {
@@ -103,11 +103,11 @@ const SongCard = ({ song, isPlaying, activeSong }) => {
             : ""
         }
       >
-        <div className="relative w-full lg:h-[178px] group">
+        <div className="relative w-full lg:h-[178px] group rounded-xl sm:rounded-2xl overflow-hidden">
           <div
-            className={`absolute inset-0 p-2 justify-center items-center bg-black bg-opacity-0 group-hover:flex ${
+            className={`absolute inset-0 z-10 p-2 justify-center items-center bg-black/40 backdrop-blur-sm group-hover:flex transition-all ${
               activeSong?.id === song?.id
-                ? "hover:flex hover:bg-black hover:bg-opacity-70"
+                ? "flex bg-black/50"
                 : "hidden"
             }`}
           >
@@ -134,21 +134,21 @@ const SongCard = ({ song, isPlaying, activeSong }) => {
             className={`${
               song?.type === "playlist" && song?.subtitle === "JioSaavn"
                 ? "rounded-full"
-                : "rounded-lg"
-            } w-full h-full object-cover`}
+                : "rounded-xl sm:rounded-2xl"
+            } w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300`}
           />
         </div>
 
-        <div className=" mt-2 lg:mt-4 flex flex-col">
+        <div className="mt-2.5 lg:mt-3 flex flex-col px-0.5">
           <p
-            className={`font-semibold text-xs lg:text-sm text-white truncate w-full ${
+            className={`font-bold text-xs lg:text-sm text-white truncate w-full group-hover/card:text-[#00e6e6] transition-colors ${
               song?.subtitle === "JioSaavn" ? "text-center" : ""
             }`}
           >
             {song?.name?.replaceAll("&#039;", "'")?.replaceAll("&amp;", "&") ||
               song?.title}
           </p>
-          <p className="text-[9px] lg:text-xs truncate text-gray-300 mt-1">
+          <p className="text-[10px] lg:text-xs truncate text-gray-400 mt-0.5 font-medium">
             {artistDisplay}
           </p>
         </div>

@@ -42,16 +42,14 @@ const SongBar = ({ playlist, i }) => {
   return (
     <Link href={`/playlist/${playlist?.id}`}>
       <div
-        className={`w-full flex flex-row items-center group bg-opacity-20 py-2 p-4 rounded-lg cursor-pointer mb-2 `}
+        className={`w-full flex flex-row items-center group py-2.5 px-4 rounded-2xl sm:rounded-3xl backdrop-blur-xl border border-white/10 hover:border-white/25 bg-white/[0.04] hover:bg-white/[0.08] shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer mb-3`}
         style={{
           background:
             cardColor &&
-            `linear-gradient(90deg, rgba(${cardColor[0].red}, ${cardColor[0].green}, ${cardColor[0].blue}, 0.2) 0%, rgba(${cardColor[1].red}, ${cardColor[1].green}, ${cardColor[1].blue}, 0.3) 5%,
-              rgba(${cardColor[2].red}, ${cardColor[2].green}, ${cardColor[2].blue}, 0.2 
-              ) 100%)`,
+            `linear-gradient(90deg, rgba(${cardColor[0].red}, ${cardColor[0].green}, ${cardColor[0].blue}, 0.25) 0%, rgba(${cardColor[1].red}, ${cardColor[1].green}, ${cardColor[1].blue}, 0.2) 50%, rgba(255, 255, 255, 0.03) 100%)`,
         }}
       >
-        <h3 className=" text-base text-white mr-3 font-extrabold">{i + 1}.</h3>
+        <h3 className="text-base sm:text-lg text-white/70 mr-3.5 font-black">{i + 1}.</h3>
         <div className="flex-1 flex flex-row justify-between items-center">
           <img
             width={80}
@@ -64,20 +62,20 @@ const SongBar = ({ playlist, i }) => {
             onError={(e) => {
               e.currentTarget.src = "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg";
             }}
-            className="w-20 h-20 rounded-lg object-cover"
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl object-cover shadow-md group-hover:scale-105 transition-transform duration-300"
           />
-          <div className="flex-1 flex flex-col justify-center mx-3">
-            <p className="font-semibold text-base w-40 lg:text-xl text-white truncate md:w-full">
+          <div className="flex-1 flex flex-col justify-center mx-3 sm:mx-4">
+            <p className="font-bold text-sm sm:text-base lg:text-lg text-white truncate max-w-[180px] sm:max-w-md group-hover:text-[#00e6e6] transition-colors">
               {playlist?.title}
             </p>
-            <p className="md:text-base text-sm text-gray-300 mt-1 capitalize">
-              {playlist?.language}
+            <p className="text-xs sm:text-sm text-gray-400 mt-1 capitalize font-medium">
+              {playlist?.language} • {playlist?.videoCount || "Top"} Tracks
             </p>
           </div>
         </div>
         <FaPlayCircle
-          size={35}
-          className="text-gray-300 group-hover:scale-125 transform transition-all duration-300 ease-in-out"
+          size={36}
+          className="text-[#00e6e6]/80 group-hover:text-[#00e6e6] group-hover:scale-110 transform transition-all duration-300 ease-in-out flex-shrink-0 mr-1"
         />
       </div>
     </Link>

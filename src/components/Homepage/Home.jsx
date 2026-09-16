@@ -12,6 +12,9 @@ import { GiMusicalNotes } from "react-icons/gi";
 import SongBar from "./SongBar";
 import OnlineStatus from "./OnlineStatus";
 import ListenAgain from "./ListenAgain";
+import TopArtists from "./TopArtists";
+import MoodStations from "./MoodStations";
+import QuickPicks from "./QuickPicks";
 
 const Home = () => {
   const [data, setData] = useState(null);
@@ -57,19 +60,24 @@ const Home = () => {
   return (
     <div className="pt-2 sm:pt-4">
       <OnlineStatus />
-      <div className="flex justify-between items-start px-4 sm:px-6 my-4 sm:my-6 select-none">
-        <h1 className="text-[2.75rem] sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.08]">
+      <div className="flex justify-between items-start px-4 sm:px-6 my-4 sm:my-8 select-none">
+        <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-white tracking-tighter leading-[0.95] sm:leading-[0.9]">
           &quot;Good
           <br />
           {timeOfDay}
         </h1>
-        <div className="flex items-center gap-1.5 text-white pt-2 sm:pt-3">
-          <GiMusicalNotes className="text-3xl sm:text-4xl md:text-5xl text-white" />
-          <span className="text-4xl sm:text-5xl md:text-6xl font-black">&quot;</span>
+        <div className="flex items-center gap-2 sm:gap-3 text-white pt-2 sm:pt-4 select-none">
+          <GiMusicalNotes className="text-4xl sm:text-5xl md:text-6xl text-white drop-shadow-[0_0_16px_rgba(255,255,255,0.4)] animate-pulse" />
+          <span className="text-5xl sm:text-6xl md:text-7xl font-black">&quot;</span>
         </div>
       </div>
 
       <ListenAgain />
+
+      {/* Quick Picks • Tap to play */}
+      {!loading && trendingSongs.length > 0 && (
+        <QuickPicks songs={trendingSongs} />
+      )}
 
       {/* trending */}
       <SwiperLayout title={"Trending"}>
@@ -100,12 +108,23 @@ const Home = () => {
         )}
       </SwiperLayout>
 
+      {/* Top Artists • Purvi Music Style */}
+      <TopArtists />
+
+      {/* Moods & Vibes Stations */}
+      <MoodStations />
+
       {/* top charts */}
-      <div className="my-4 lg:mt-14">
-        <h2 className=" text-white mt-4 text-2xl lg:text-3xl font-semibold mb-4 ">
-          Top Charts
-        </h2>
-        <div className="grid lg:grid-cols-2 gap-x-10 max-h-96 lg:max-h-full lg:overflow-y-auto overflow-y-scroll">
+      <div className="my-6 lg:mt-14 select-none">
+        <div className="mb-4">
+          <h2 className="text-white text-2xl lg:text-3xl font-extrabold tracking-tight">
+            Top Charts
+          </h2>
+          <p className="text-xs sm:text-sm text-gray-400 mt-0.5">
+            Most popular playlists this week
+          </p>
+        </div>
+        <div className="grid lg:grid-cols-2 gap-x-6 max-h-96 lg:max-h-full lg:overflow-y-auto overflow-y-scroll">
           {loading ? (
             <div className=" w-[90vw] overflow-x-hidden">
               <SongCardSkeleton />
