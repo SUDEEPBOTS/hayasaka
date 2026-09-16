@@ -24,13 +24,13 @@ const Home = () => {
   const currentTime = new Date();
   const currentHour = currentTime.getHours();
 
-  let timeOfDay = "";
+  let timeOfDay = "afternoon";
   if (currentHour >= 5 && currentHour < 12) {
-    timeOfDay = "Morning";
+    timeOfDay = "morning";
   } else if (currentHour >= 12 && currentHour < 18) {
-    timeOfDay = "Afternoon";
+    timeOfDay = "afternoon";
   } else {
-    timeOfDay = "Evening";
+    timeOfDay = "evening";
   }
 
   useEffect(() => {
@@ -55,17 +55,17 @@ const Home = () => {
   const playlists = Array.isArray(data?.playlists) ? data.playlists : [];
 
   return (
-    <div className="pt-3 sm:pt-5">
+    <div className="pt-2 sm:pt-4">
       <OnlineStatus />
-      <div className="px-3 sm:px-6 mb-4 sm:mb-6">
-        <div className="flex flex-col">
-          <p className="text-xl sm:text-2xl font-bold uppercase tracking-wider text-[#00e6e6]">
-            {timeOfDay}
-          </p>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white flex items-center gap-3 tracking-tight">
-            <span>Good</span>
-            <GiMusicalNotes className="text-[#00e6e6] text-2xl sm:text-3xl" />
-          </h1>
+      <div className="flex justify-between items-start px-4 sm:px-6 my-4 sm:my-6 select-none">
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-[1.15]">
+          &quot;Good
+          <br />
+          {timeOfDay}
+        </h1>
+        <div className="flex items-center gap-1.5 text-white pt-1">
+          <GiMusicalNotes className="text-2xl sm:text-3xl text-white" />
+          <span className="text-3xl sm:text-4xl font-bold">&quot;</span>
         </div>
       </div>
 
