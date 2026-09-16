@@ -6,33 +6,41 @@ import dbConnect from "@/utils/dbconnect";
 import GoogleProvider from "next-auth/providers/google";
 import UserData from "@/models/UserData";
 
-const options = {
-  providers: [
+const providers = [];
+
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
+    })
+  );
+}
 
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {},
-      async authorize(credentials) {
-        try {
-          await dbConnect();
-          console.log("credentials");
-          const { email, password } = credentials;
-          const user = await User.findOne({ email });
-          if (user && (await bcrypt.compare(password, user.password))) {
-            return user;
-          }
-          return null;
-        } catch (e) {
-          console.error(e);
-          return null;
+providers.push(
+  CredentialsProvider({
+    name: "Credentials",
+    credentials: {},
+    async authorize(credentials) {
+      try {
+        await dbConnect();
+        console.log("credentials");
+        const { email, password } = credentials;
+        const user = await User.findOne({ email });
+        if (user && (await bcrypt.compare(password, user.password))) {
+          return user;
         }
-      },
-    }),
-  ],
+        return null;
+      } catch (e) {
+        console.error(e);
+        return null;
+      }
+    },
+  })
+);
+
+const options = {
+  providers,
   pages: {
     signIn: "/login",
     signOut: "/",
@@ -42,7 +50,10 @@ const options = {
     jwt: true,
     maxAge: 30 * 24 * 60 * 60,
   },
-  secret: process.env.JWT_SECRET,
+  secret:
+    process.env.NEXTAUTH_SECRET ||
+    process.env.JWT_SECRET ||
+    "meow_music_nextauth_default_super_secret_32_chars_key_2026",
 
   callbacks: {
     // async session({ session}) {

@@ -24,13 +24,13 @@ const Home = () => {
   const currentTime = new Date();
   const currentHour = currentTime.getHours();
 
-  let salutation = "";
+  let timeOfDay = "";
   if (currentHour >= 5 && currentHour < 12) {
-    salutation = "Good morning";
+    timeOfDay = "Morning";
   } else if (currentHour >= 12 && currentHour < 18) {
-    salutation = "Good afternoon";
+    timeOfDay = "Afternoon";
   } else {
-    salutation = "Good evening";
+    timeOfDay = "Evening";
   }
 
   useEffect(() => {
@@ -58,12 +58,15 @@ const Home = () => {
     <div className="pt-3 sm:pt-5">
       <OnlineStatus />
       <div className="px-3 sm:px-6 mb-4 sm:mb-6">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white flex items-center gap-3 tracking-tight">
-          <span className="bg-gradient-to-r from-white via-gray-100 to-[#00e6e6] bg-clip-text text-transparent">
-            {salutation}
-          </span>
-          <GiMusicalNotes className="text-[#00e6e6] text-2xl sm:text-3xl" />
-        </h1>
+        <div className="flex flex-col">
+          <p className="text-xl sm:text-2xl font-bold uppercase tracking-wider text-[#00e6e6]">
+            {timeOfDay}
+          </p>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white flex items-center gap-3 tracking-tight">
+            <span>Good</span>
+            <GiMusicalNotes className="text-[#00e6e6] text-2xl sm:text-3xl" />
+          </h1>
+        </div>
       </div>
 
       <ListenAgain />

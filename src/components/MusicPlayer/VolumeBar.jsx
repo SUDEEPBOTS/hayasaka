@@ -17,6 +17,7 @@ const VolumeBar = ({
   setVolume,
   activeSong,
   bgColor,
+  fullScreen,
   onOpenEqualizer,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
