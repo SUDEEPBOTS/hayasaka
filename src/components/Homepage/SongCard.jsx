@@ -26,8 +26,19 @@ const SongCard = ({ song, isPlaying, activeSong }) => {
   const handlePlayClick = async () => {
     if (song?.type === "song") {
       setLoading(true);
-      const Data = await getSongData(song?.id);
-      const songData = Array.isArray(Data) ? Data[0] : Data;
+      let songData = song;
+      if (!song?.downloadUrl || song?.name?.startsWith("Song ") || song?.title?.startsWith("Song ")) {
+        const Data = await getSongData(song?.id);
+        const fetched = Array.isArray(Data) ? Data[0] : Data;
+        if (fetched) {
+          songData = {
+            ...song,
+            ...fetched,
+            name: (fetched.name && !fetched.name.startsWith("Song ")) ? fetched.name : (song.name || song.title),
+            title: (fetched.title && !fetched.title.startsWith("Song ")) ? fetched.title : song.title,
+          };
+        }
+      }
       const primaryArtistsId =
         songData?.primaryArtistsId ||
         songData?.artists?.primary?.[0]?.id ||

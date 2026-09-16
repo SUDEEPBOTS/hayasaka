@@ -38,8 +38,19 @@ const page = ({ params }) => {
 
   const handlePlayClick = async (song) => {
     if (song?.type === "song") {
-      const Data = await getSongData(song?.id);
-      const songData = Array.isArray(Data) ? Data[0] : Data;
+      let songData = song;
+      if (!song?.downloadUrl || song?.title?.startsWith("Song ")) {
+        const Data = await getSongData(song?.id);
+        const fetched = Array.isArray(Data) ? Data[0] : Data;
+        if (fetched) {
+          songData = {
+            ...song,
+            ...fetched,
+            title: (fetched.title && !fetched.title.startsWith("Song ")) ? fetched.title : song.title,
+            name: (fetched.name && !fetched.name.startsWith("Song ")) ? fetched.name : (song.name || song.title),
+          };
+        }
+      }
       dispatch(
         setActiveSong({
           song: songData,

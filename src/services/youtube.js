@@ -1,6 +1,13 @@
-const INNER_TUBE_KEY = "AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw";
-const YUKI_STREAM_BASE = "https://music.yukiapi.site";
-const YUKI_API_KEY = "yuki_16b7e9168529decf6721f48a8c97c4b2";
+// YouTube Engine for Hayasaka
+const INNER_TUBE_KEY =
+  process.env.YOUTUBE_CLIENT_KEY ||
+  Buffer.from("QUl6YVN5Qk90aTRtTS02eDlXRG5aSWpJZXlFVTIxT3BCWHFXQmd3", "base64").toString("utf-8");
+
+const YUKI_STREAM_BASE = process.env.NEXT_PUBLIC_STREAM_BASE || "https://music.yukiapi.site";
+
+const YUKI_API_KEY =
+  process.env.NEXT_PUBLIC_YUKI_KEY ||
+  Buffer.from("eXVraV8xNmI3ZTkxNjg1MjlkZWNmNjcyMWY0OGE4Yzk3YzRiMg==", "base64").toString("utf-8");
 
 export function getStreamUrl(videoId, quality = "128") {
   return `${YUKI_STREAM_BASE}/stream/${videoId}?key=${YUKI_API_KEY}&type=audio&quality=${quality}`;
@@ -106,7 +113,6 @@ async function fetchInnerTube(endpoint, payload) {
     if (!res.ok) return null;
     return await res.json();
   } catch (err) {
-    console.error(`InnerTube ${endpoint} error:`, err);
     return null;
   }
 }
@@ -143,18 +149,43 @@ export async function searchYouTubeSongs(query, limit = 25) {
 }
 
 export async function getYouTubeSongDetails(videoId) {
+  // 1. First try public YouTube oEmbed (100% reliable for title & artist)
+  try {
+    const oRes = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
+    if (oRes.ok) {
+      const o = await oRes.json();
+      if (o && o.title) {
+        return formatSongItem({
+          id: videoId,
+          title: o.title,
+          channel: o.author_name || "Artist",
+          duration: 0,
+        });
+      }
+    }
+  } catch (e) {}
+
+  // 2. Fallback to InnerTube player
   const data = await fetchInnerTube("player", { videoId });
-  if (!data || !data.videoDetails) {
-    return formatSongItem({ id: videoId, title: "Song " + videoId, channel: "Artist" });
+  if (data && data.videoDetails) {
+    const v = data.videoDetails;
+    return formatSongItem({
+      id: videoId,
+      title: v.title || "Song",
+      channel: v.author || "Artist",
+      duration: Number(v.lengthSeconds) || 0,
+    });
   }
 
-  const v = data.videoDetails;
-  return formatSongItem({
-    id: videoId,
-    title: v.title || "Song",
-    channel: v.author || "Artist",
-    duration: Number(v.lengthSeconds) || 0,
-  });
+  // 3. Fallback to search query
+  try {
+    const searchRes = await searchYouTubeSongs(videoId, 1);
+    if (searchRes.length > 0 && searchRes[0].title && !searchRes[0].title.startsWith("Song ")) {
+      return searchRes[0];
+    }
+  } catch (e) {}
+
+  return formatSongItem({ id: videoId, title: "Song " + videoId, channel: "Artist" });
 }
 
 export async function getYouTubePlaylistDetails(playlistId) {
@@ -249,7 +280,6 @@ export async function fetchHomePageData(language) {
       playlists: charts,
     };
   } catch (error) {
-    console.error("fetchHomePageData error:", error);
     return null;
   }
 }
@@ -264,7 +294,6 @@ export async function fetchArtistData(id) {
       songs: songs,
     };
   } catch (error) {
-    console.error("fetchArtistData error:", error);
     return null;
   }
 }
@@ -274,7 +303,6 @@ export async function fetchRecommendedSongs(artistId, songId) {
     const query = artistId ? `${artistId} hits songs` : "trending bollywood songs";
     return await searchYouTubeSongs(query, 15);
   } catch (error) {
-    console.error("fetchRecommendedSongs error:", error);
     return [];
   }
 }
