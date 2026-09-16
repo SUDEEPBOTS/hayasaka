@@ -18,7 +18,7 @@ const Track = ({ isPlaying, isActive, activeSong, fullScreen }) => {
         <div
           className={`${
             isPlaying && isActive ? "animate-[spin_18s_linear_infinite]" : ""
-          } h-14 w-14 sm:h-16 sm:w-16 rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.6)] border border-white/25 flex-shrink-0`}
+          } h-11 w-11 sm:h-12 sm:w-12 rounded-full overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.5)] border border-white/25 flex-shrink-0`}
         >
           <img
             src={
@@ -33,12 +33,12 @@ const Track = ({ isPlaying, isActive, activeSong, fullScreen }) => {
         </div>
         {/* Subtle center spindle dot for vinyl look when spinning */}
         {isPlaying && isActive && (
-          <div className="absolute inset-0 m-auto w-3.5 h-3.5 rounded-full bg-black/80 border border-white/40 pointer-events-none" />
+          <div className="absolute inset-0 m-auto w-3 h-3 rounded-full bg-black/80 border border-white/40 pointer-events-none" />
         )}
       </div>
 
-      <div className="min-w-0 max-w-[220px] sm:max-w-[280px] select-none cursor-pointer flex flex-col justify-center">
-        <p className="truncate text-white font-bold text-sm sm:text-base tracking-wide">
+      <div className="min-w-0 max-w-[200px] sm:max-w-[240px] select-none cursor-pointer flex flex-col justify-center">
+        <p className="truncate text-white font-semibold text-sm sm:text-base tracking-wide">
           {activeSong?.name
             ? activeSong?.name.replace("&#039;", "'").replace("&amp;", "&")
             : "Song"}

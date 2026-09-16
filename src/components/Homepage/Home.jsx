@@ -58,14 +58,14 @@ const Home = () => {
     <div className="pt-2 sm:pt-4">
       <OnlineStatus />
       <div className="flex justify-between items-start px-4 sm:px-6 my-4 sm:my-6 select-none">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-[1.15]">
+        <h1 className="text-[2.75rem] sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.08]">
           &quot;Good
           <br />
           {timeOfDay}
         </h1>
-        <div className="flex items-center gap-1.5 text-white pt-1">
-          <GiMusicalNotes className="text-2xl sm:text-3xl text-white" />
-          <span className="text-3xl sm:text-4xl font-bold">&quot;</span>
+        <div className="flex items-center gap-1.5 text-white pt-2 sm:pt-3">
+          <GiMusicalNotes className="text-3xl sm:text-4xl md:text-5xl text-white" />
+          <span className="text-4xl sm:text-5xl md:text-6xl font-black">&quot;</span>
         </div>
       </div>
 
