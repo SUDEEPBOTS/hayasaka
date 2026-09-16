@@ -11,7 +11,7 @@ const page = async ({ params }) => {
         <img
           className="rounded-full object-cover shadow-2xl"
           referrerPolicy="no-referrer"
-          src={playlistData?.image?.[2]?.url || playlistData?.image?.[1]?.url || playlistData?.image?.[0]?.url || "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg"}
+          src={playlistData?.image?.[2]?.url || playlistData?.image?.[1]?.url || playlistData?.image?.[0]?.url || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&h=500&fit=crop"}
           alt={playlistData?.name || playlistData?.title}
           width={300}
           height={300}

@@ -115,7 +115,7 @@ const page = ({ params }) => {
                     <div className="flex items-center gap-5">
                       <div className=" relative">
                         <img
-                          src={song?.image?.[2]?.url || song?.image?.[1]?.url || song?.image?.[0]?.url || "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg"}
+                          src={song?.image?.[2]?.url || song?.image?.[1]?.url || song?.image?.[0]?.url || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&h=500&fit=crop"}
                           alt={song?.title || song?.name}
                           width={50}
                           height={50}
@@ -166,7 +166,7 @@ const page = ({ params }) => {
                   <Link href={`/artist/${artist?.id}`}>
                     <div className=" flex flex-col justify-center items-center">
                       <img
-                        src={artist?.image?.[2]?.url || artist?.image?.[1]?.url || artist?.image?.[0]?.url || "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg"}
+                        src={artist?.image?.[2]?.url || artist?.image?.[1]?.url || artist?.image?.[0]?.url || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&h=500&fit=crop"}
                         alt={artist?.name || artist?.title}
                         width={200}
                         height={200}

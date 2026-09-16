@@ -1,13 +1,15 @@
 import {
-  searchYouTubeSongs,
-  getYouTubeSongDetails,
-  getYouTubePlaylistDetails,
+  searchAll,
+  searchSongs,
+  getSongDetails,
+  getAlbumDetails,
+  getPlaylistDetails,
+  getArtistDetails,
+  getArtistSongs as fetchArtistSongs,
+  getArtistAlbums as fetchArtistAlbums,
   fetchHomePageData,
-  fetchArtistData,
   fetchRecommendedSongs,
-  formatPlaylistItem,
-  FEATURED_PLAYLISTS,
-} from "./youtube";
+} from "./jiosaavn";
 
 const isBrowser = typeof window !== "undefined";
 
@@ -35,8 +37,7 @@ export async function getSongData(id) {
       if (!res.ok) throw new Error("Failed to fetch song data");
       return await res.json();
     }
-    const song = await getYouTubeSongDetails(id);
-    return song ? [song] : null;
+    return await getSongDetails(id);
   } catch (error) {
     console.error("getSongData error:", error);
     return null;
@@ -51,16 +52,7 @@ export async function getAlbumData(id) {
       if (!res.ok) throw new Error("Failed to fetch album data");
       return await res.json();
     }
-    const pl = await getYouTubePlaylistDetails(id);
-    return {
-      id: pl.id,
-      name: pl.name,
-      title: pl.title,
-      description: pl.description,
-      image: pl.image,
-      artists: { primary: [{ id: "Various", name: "Various Artists" }] },
-      songs: pl.songs,
-    };
+    return await getAlbumDetails(id);
   } catch (error) {
     console.error("getAlbumData error:", error);
     return null;
@@ -75,7 +67,7 @@ export async function getplaylistData(id) {
       if (!res.ok) throw new Error("Failed to fetch playlist data");
       return await res.json();
     }
-    return await getYouTubePlaylistDetails(id);
+    return await getPlaylistDetails(id);
   } catch (error) {
     console.error("getplaylistData error:", error);
     return null;
@@ -95,7 +87,7 @@ export async function getArtistData(id) {
       if (!res.ok) throw new Error("Failed to fetch artist data");
       return await res.json();
     }
-    return await fetchArtistData(id);
+    return await getArtistDetails(id);
   } catch (error) {
     console.error("getArtistData error:", error);
     return null;
@@ -106,12 +98,11 @@ export async function getArtistData(id) {
 export async function getArtistSongs(id, page = 1) {
   try {
     if (isBrowser) {
-      const res = await fetch(`/api/music?action=search&q=${encodeURIComponent(id + " songs hit")}`);
+      const res = await fetch(`/api/music?action=artist-songs&id=${encodeURIComponent(id)}&page=${page}`);
       if (!res.ok) return [];
-      const data = await res.json();
-      return data?.songs?.results || [];
+      return await res.json();
     }
-    return await searchYouTubeSongs(`${id} songs hit`, 25);
+    return await fetchArtistSongs(id, page);
   } catch (error) {
     console.error("getArtistSongs error:", error);
     return [];
@@ -120,7 +111,17 @@ export async function getArtistSongs(id, page = 1) {
 
 // get artist albums
 export async function getArtistAlbums(id, page = 1) {
-  return [];
+  try {
+    if (isBrowser) {
+      const res = await fetch(`/api/music?action=artist-albums&id=${encodeURIComponent(id)}&page=${page}`);
+      if (!res.ok) return [];
+      return await res.json();
+    }
+    return await fetchArtistAlbums(id, page);
+  } catch (error) {
+    console.error("getArtistAlbums error:", error);
+    return [];
+  }
 }
 
 // get search data
@@ -131,22 +132,7 @@ export async function getSearchedData(query) {
       if (!res.ok) throw new Error("Failed to fetch search data");
       return await res.json();
     }
-    const songs = await searchYouTubeSongs(query, 30);
-    const topSong = songs[0] || null;
-    return {
-      topQuery: {
-        results: topSong ? [topSong] : [],
-      },
-      songs: {
-        results: songs,
-      },
-      albums: {
-        results: songs.slice(0, 10),
-      },
-      playlists: {
-        results: FEATURED_PLAYLISTS.map(formatPlaylistItem),
-      },
-    };
+    return await searchAll(query);
   } catch (error) {
     console.error("getSearchedData error:", error);
     return null;

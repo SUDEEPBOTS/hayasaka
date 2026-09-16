@@ -41,7 +41,7 @@ const ListenAgainCard = ({ song, index, SongData }) => {
           <div className="relative flex-shrink-0">
             <div className="group w-12 h-12 md:w-14 md:h-14 relative rounded-xl overflow-hidden shadow-sm">
               <img
-                src={song?.image?.[2]?.url || song?.image?.[1]?.url || song?.image?.[2]?.link || "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg"}
+                src={song?.image?.[2]?.url || song?.image?.[1]?.url || song?.image?.[2]?.link || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&h=500&fit=crop"}
                 alt={song?.name}
                 width={56}
                 height={56}

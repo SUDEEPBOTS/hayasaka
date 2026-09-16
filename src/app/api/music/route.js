@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
 import {
-  searchYouTubeSongs,
-  getYouTubeSongDetails,
-  getYouTubePlaylistDetails,
+  searchAll,
+  getSongDetails,
+  getAlbumDetails,
+  getPlaylistDetails,
+  getArtistDetails,
+  getArtistSongs,
+  getArtistAlbums,
   fetchHomePageData,
-  fetchArtistData,
   fetchRecommendedSongs,
-  formatPlaylistItem,
-  FEATURED_PLAYLISTS,
-} from "@/services/youtube";
+} from "@/services/jiosaavn";
 
 export const dynamic = "force-dynamic";
 
@@ -27,22 +28,8 @@ export async function GET(request) {
           playlists: { results: [] },
         });
       }
-      const songs = await searchYouTubeSongs(q, 30);
-      const topSong = songs[0] || null;
-      return NextResponse.json({
-        topQuery: {
-          results: topSong ? [topSong] : [],
-        },
-        songs: {
-          results: songs,
-        },
-        albums: {
-          results: songs.slice(0, 10),
-        },
-        playlists: {
-          results: FEATURED_PLAYLISTS.map(formatPlaylistItem),
-        },
-      });
+      const results = await searchAll(q);
+      return NextResponse.json(results);
     }
 
     if (action === "home") {
@@ -54,37 +41,43 @@ export async function GET(request) {
     if (action === "song") {
       const id = searchParams.get("id");
       if (!id) return NextResponse.json(null, { status: 400 });
-      const song = await getYouTubeSongDetails(id);
-      return NextResponse.json(song ? [song] : null);
+      const song = await getSongDetails(id);
+      return NextResponse.json(song);
     }
 
     if (action === "playlist") {
       const id = searchParams.get("id");
       if (!id) return NextResponse.json(null, { status: 400 });
-      const pl = await getYouTubePlaylistDetails(id);
+      const pl = await getPlaylistDetails(id);
       return NextResponse.json(pl);
     }
 
     if (action === "album") {
       const id = searchParams.get("id");
       if (!id) return NextResponse.json(null, { status: 400 });
-      const pl = await getYouTubePlaylistDetails(id);
-      return NextResponse.json({
-        id: pl.id,
-        name: pl.name,
-        title: pl.title,
-        description: pl.description,
-        image: pl.image,
-        artists: { primary: [{ id: "Various", name: "Various Artists" }] },
-        songs: pl.songs,
-      });
+      const alb = await getAlbumDetails(id);
+      return NextResponse.json(alb);
     }
 
     if (action === "artist") {
       const id = searchParams.get("id");
       if (!id) return NextResponse.json(null, { status: 400 });
-      const data = await fetchArtistData(id);
+      const data = await getArtistDetails(id);
       return NextResponse.json(data);
+    }
+
+    if (action === "artist-songs") {
+      const id = searchParams.get("id");
+      const page = searchParams.get("page") || 1;
+      const songs = await getArtistSongs(id, page);
+      return NextResponse.json(songs);
+    }
+
+    if (action === "artist-albums") {
+      const id = searchParams.get("id");
+      const page = searchParams.get("page") || 1;
+      const albums = await getArtistAlbums(id, page);
+      return NextResponse.json(albums);
     }
 
     if (action === "recommendations") {

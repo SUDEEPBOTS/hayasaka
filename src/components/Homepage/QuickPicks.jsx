@@ -117,14 +117,14 @@ const QuickPicks = ({ songs = [] }) => {
                     song?.image?.[2]?.url ||
                     song?.image?.[1]?.url ||
                     song?.image?.[0]?.url ||
-                    "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg"
+                    "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&h=500&fit=crop"
                   }
                   alt={song?.name || "song"}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                   loading="lazy"
                   onError={(e) => {
                     e.currentTarget.src =
-                      "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg";
+                      "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&h=500&fit=crop";
                   }}
                 />
                 <div

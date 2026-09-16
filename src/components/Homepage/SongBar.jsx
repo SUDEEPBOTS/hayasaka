@@ -37,7 +37,7 @@ const SongBar = ({ playlist, i }) => {
     playlist?.image?.[2]?.url ||
     playlist?.image?.[1]?.url ||
     playlist?.image?.[0]?.url ||
-    "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg";
+    "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&h=500&fit=crop";
 
   return (
     <Link href={`/playlist/${playlist?.id}`}>
@@ -60,7 +60,7 @@ const SongBar = ({ playlist, i }) => {
             crossOrigin="anonymous"
             src={thumbUrl}
             onError={(e) => {
-              e.currentTarget.src = "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg";
+              e.currentTarget.src = "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&h=500&fit=crop";
             }}
             className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl object-cover shadow-md group-hover:scale-105 transition-transform duration-300"
           />

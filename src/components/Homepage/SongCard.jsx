@@ -127,9 +127,9 @@ const SongCard = ({ song, isPlaying, activeSong }) => {
             alt="song_img"
             referrerPolicy="no-referrer"
             crossOrigin="anonymous"
-            src={song?.image?.[2]?.url || song?.image?.[1]?.url || song?.image?.[0]?.url || "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg"}
+            src={song?.image?.[2]?.url || song?.image?.[1]?.url || song?.image?.[0]?.url || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&h=500&fit=crop"}
             onError={(e) => {
-              e.currentTarget.src = "https://i.ytimg.com/vi/sDne5fEsxec/hqdefault.jpg";
+              e.currentTarget.src = "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&h=500&fit=crop";
             }}
             className={`${
               song?.type === "playlist" && song?.subtitle === "JioSaavn"
