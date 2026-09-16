@@ -2,9 +2,9 @@
 import React from "react";
 import Link from "next/link";
 import { FaPlay } from "react-icons/fa";
+import { BsFire } from "react-icons/bs";
 import {
   FiMoon,
-  FiFlame,
   FiHeart,
   FiZap,
   FiCloudRain,
@@ -25,7 +25,7 @@ const MOODS = [
     title: "Bollywood Party",
     subtitle: "High-energy club & dance tracks",
     query: "Bollywood party dance songs 2026",
-    Icon: FiFlame,
+    Icon: BsFire,
     gradient: "from-rose-950/70 via-orange-950/50 to-neutral-900/60",
     border: "border-rose-500/20 hover:border-rose-400/50",
     glow: "shadow-[0_8px_30px_rgba(244,63,94,0.2)]",
